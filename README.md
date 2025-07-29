@@ -1,4 +1,12 @@
-# Lucina - Korean Skincare E-commerce
+<div align="center" style="margin-top: 30px;">
+  <img src="./frontend/assets/images/logo.png" height="100px" alt="Lucina logo"/>
+  <h1>Lucina - Korean Skincare E-commerce</h1>
+</div>
+
+
+---
+
+## Overview
 
 **Lucina** is a modern e-commerce platform focused on delivering high-quality Korean skincare products to the Italian market. Built with **Angular**, **.NET Core** and **Stripe**, the project offers a full-stack implementation of an online store with an optimized shopping experience, clean architecture and enterprise-level scalability.
 
