@@ -41,6 +41,7 @@ ScaffoldingReadMe.txt
 *~
 CodeCoverage/
 .env
+Folder.DotSettings.user
 
 # MSBuild Binary and Structured Log
 *.binlog
@@ -54,3 +55,5 @@ CodeCoverage/
 TestResult.xml
 nunit-*.xml
 /API/appsettings.Development.json
+/.idea/dataSources/7dff15f9-0ce6-4b60-8b97-1d097eecb5f2.xml
+/.idea/dataSources/7dff15f9-0ce6-4b60-8b97-1d097eecb5f2/

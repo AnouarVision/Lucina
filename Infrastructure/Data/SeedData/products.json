@@ -1,0 +1,92 @@
+﻿[
+  {
+    "Name": "Cosrx Snail Mucin Essence",
+    "Description": "Essenza rigenerante con bava di lumaca, ideale per idratare e riparare la pelle stressata.",
+    "Price": 23.99,
+    "PictureUrl": "/images/products/sk-cosrx1.png",
+    "Type": "Essence",
+    "Brand": "Cosrx",
+    "QuantityInStock": 82
+  },
+  {
+    "Name": "Beauty of Joseon Glow Serum",
+    "Description": "Siero con propoli e niacinamide per una pelle luminosa e uniforme.",
+    "Price": 18.50,
+    "PictureUrl": "/images/products/sk-joseon1.png",
+    "Type": "Serum",
+    "Brand": "Beauty of Joseon",
+    "QuantityInStock": 75
+  },
+  {
+    "Name": "Isntree Hyaluronic Acid Toner",
+    "Description": "Toner idratante con 5 tipi di acido ialuronico per un'idratazione profonda.",
+    "Price": 21.00,
+    "PictureUrl": "/images/products/sk-isntree1.png",
+    "Type": "Toner",
+    "Brand": "Isntree",
+    "QuantityInStock": 68
+  },
+  {
+    "Name": "Dr.Jart+ Cicapair Cream",
+    "Description": "Crema lenitiva con centella asiatica per pelli sensibili e arrossate.",
+    "Price": 34.90,
+    "PictureUrl": "/images/products/sk-drjart1.png",
+    "Type": "Cream",
+    "Brand": "Dr.Jart+",
+    "QuantityInStock": 52
+  },
+  {
+    "Name": "Some By Mi AHA-BHA-PHA Miracle Toner",
+    "Description": "Tonico esfoliante delicato per pelle acneica, affina i pori e leviga la grana della pelle.",
+    "Price": 19.90,
+    "PictureUrl": "/images/products/sk-someby1.png",
+    "Type": "Toner",
+    "Brand": "Some By Mi",
+    "QuantityInStock": 97
+  },
+  {
+    "Name": "Laneige Water Sleeping Mask",
+    "Description": "Maschera notte idratante, perfetta per ricaricare la pelle durante il sonno.",
+    "Price": 27.99,
+    "PictureUrl": "/images/products/sk-laneige1.png",
+    "Type": "Mask",
+    "Brand": "Laneige",
+    "QuantityInStock": 37
+  },
+  {
+    "Name": "Innisfree Green Tea Seed Serum",
+    "Description": "Siero antiossidante con tè verde per idratare e proteggere la pelle.",
+    "Price": 22.00,
+    "PictureUrl": "/images/products/sk-innisfree1.png",
+    "Type": "Serum",
+    "Brand": "Innisfree",
+    "QuantityInStock": 32
+  },
+  {
+    "Name": "Mediheal N.M.F Aquaring Sheet Mask",
+    "Description": "Maschera in tessuto ultra idratante con acido ialuronico e ceramidi.",
+    "Price": 3.50,
+    "PictureUrl": "/images/products/sk-mediheal1.png",
+    "Type": "Sheet Mask",
+    "Brand": "Mediheal",
+    "QuantityInStock": 120
+  },
+  {
+    "Name": "Etude House SoonJung pH 5.5 Cleanser",
+    "Description": "Detergente delicato a pH bilanciato, perfetto per pelli sensibili.",
+    "Price": 11.90,
+    "PictureUrl": "/images/products/sk-etude1.png",
+    "Type": "Cleanser",
+    "Brand": "Etude House",
+    "QuantityInStock": 64
+  },
+  {
+    "Name": "Banila Co Clean It Zero Balm",
+    "Description": "Balsamo struccante che si scioglie sul viso, rimuove efficacemente trucco e impurità.",
+    "Price": 19.00,
+    "PictureUrl": "/images/products/sk-banila1.png",
+    "Type": "Cleanser",
+    "Brand": "Banila Co",
+    "QuantityInStock": 87
+  }
+]
