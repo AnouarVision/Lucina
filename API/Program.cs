@@ -8,17 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<StoreContext>(opt =>
 {
-    //the provider is Sql Server
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-// Adds ProductRepository as the implementation of IProductRepository with a scoped lifetime.
-// A new instance will be created per HTTP request.
+/*Adds ProductRepository as the implementation of IProductRepository with a scoped lifetime.
+A new instance will be created per HTTP request.*/
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-    
-var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Dependency injection for generic repository
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));    
+var app = builder.Build();
 
 app.MapControllers();
 
