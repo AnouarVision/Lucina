@@ -1,0 +1,5 @@
+@use '@angular/material' as mat;
+
+@include mat.badge-overrides((
+  background-color: #cd8e6a,
+));

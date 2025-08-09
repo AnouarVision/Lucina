@@ -1,0 +1,12 @@
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;       /* stessa larghezza per tutte */
+  height: 40px;      /* stessa altezza per tutte */
+}
+
+.icon-wrapper mat-icon {
+  font-size: 26px;   /* dimensione uniforme icona */
+  line-height: 1;
+}

@@ -1,0 +1,5 @@
+:host { display: block; }
+:host .track {
+  will-change: transform;
+  white-space: nowrap;
+}

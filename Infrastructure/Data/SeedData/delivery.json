@@ -19,7 +19,7 @@
   },
   {
     "ShortName": "Spedizione Gratuita",
-    "Description": "Spedizione gratuita per ordini sopra €25",
+    "Description": "Spedizione gratuita per ordini sopra €65",
     "DeliveryTime": "3‑5 Giorni",
     "Price": 0.00
   }

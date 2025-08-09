@@ -1,0 +1,22 @@
+@use '@angular/material' as mat;
+$hero-bg-image: "/assets/images/testimonial.png";
+
+.hero-image {
+  background-image: url(#{$hero-bg-image});
+  height: 55vh;
+  background-position: center calc(100% + 310px);
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+.custom-hero-button {
+  background-color: #a9876e !important;
+  color: white !important;
+  border-radius: 7px !important;
+
+  &:hover {
+    background-color: #917a65 !important;
+  }
+}
+
