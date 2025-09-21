@@ -32,6 +32,9 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()
 	.WithOrigins("https://localhost:4200", "https://localhost:5001"));
 
+//Enables static files from wwwroot
+app.UseStaticFiles();
+
 app.MapControllers();
 
 try{

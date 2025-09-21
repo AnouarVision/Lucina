@@ -1,11 +1,4 @@
 <app-announcement></app-announcement>
 <app-header></app-header>
-<app-hero-section></app-hero-section>
-<app-k-beauty></app-k-beauty>
-<div class="container mt-6">
-  <ul>
-    @for (product of products; track product.id){
-      <li>{{product.name}}</li>
-    }
-  </ul>
-</div>
+<router-outlet></router-outlet>
+<app-footer></app-footer>

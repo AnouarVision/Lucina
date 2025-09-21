@@ -1,0 +1,44 @@
+<div class="flex items-center justify-center">
+  <div class="max-w-md w-full border border-gray-100">
+
+    <!-- Titolo -->
+    <h3 class="text-2xl pt-2 pb-2 text-center font-semibold text-[#a9876e] tracking-wide">
+      Filtri
+    </h3>
+    <mat-divider></mat-divider>
+
+    <!-- Contenuto -->
+    <div class="flex flex-col gap-6 p-4">
+      <!-- Marchi -->
+      <div>
+        <h4 class="font-semibold text-lg text-[#a9876e]">Marchi</h4>
+        <mat-selection-list [(ngModel)]="selectedBrands" class="max-h-40 overflow-y-auto">
+          @for(brand of shopService.brands; track $index){
+            <mat-list-option [value]="brand">{{ brand }}</mat-list-option>
+          }
+        </mat-selection-list>
+      </div>
+
+      <!-- Tipi -->
+      <div>
+        <h4 class="font-semibold text-lg text-[#a9876e] mb-3">Tipi</h4>
+        <mat-selection-list [(ngModel)]="selectedTypes" class="max-h-40 overflow-y-auto">
+          @for(type of shopService.types; track $index){
+            <mat-list-option [value]="type">{{ type }}</mat-list-option>
+          }
+        </mat-selection-list>
+      </div>
+    </div>
+
+    <!-- Pulsante -->
+    <div class="flex justify-end px-6 pb-6">
+      <button
+        mat-flat-button (click)="applyFilters()"
+        [style.background]="'#a9876e'"
+        [style.color]="'white'"
+        class="px-6 py-2 text-sm font-medium rounded-lg hover:bg-[#8a705a] transition-colors">
+        Applica filtro
+      </button>
+    </div>
+  </div>
+</div>

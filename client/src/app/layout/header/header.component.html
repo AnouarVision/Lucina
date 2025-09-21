@@ -2,23 +2,36 @@
   <div class="flex items-center justify-between max-w-screen-2xl mx-auto">
 
     <!-- Logo -->
-    <img src="/assets/images/logobg.png" alt="app logo" class="max-h-11">
+    <a [routerLink]="['/']">
+      <img src="/assets/images/logobg.png" alt="app logo" class="max-h-11 cursor-pointer">
+    </a>
 
     <!-- Menu Desktop -->
     <nav class="hidden md:flex gap-5 uppercase text-lg">
-      <a>Home</a>
-      <a>Shop</a>
-      <a>Skincare Routine</a>
-      <a>About us</a>
-      <a>Contact us</a>
-      <a>FAQ</a>
+      <a [routerLink]="'/'" class="hover:text-[#a9876e] transition-colors">Home</a>
+      <a [routerLink]="'shop'" class="hover:text-[#a9876e] transition-colors">Shop</a>
+      <a [routerLink]="'/skincare-routine'" class="hover:text-[#a9876e] transition-colors">Skincare Routine</a>
+      <a [routerLink]="'/about-us'" class="hover:text-[#a9876e] transition-colors">About us</a>
+      <a [routerLink]="'/contact-us'" class="hover:text-[#a9876e] transition-colors">Contact us</a>
+      <a [routerLink]="'/faq'" class="hover:text-[#a9876e] transition-colors">FAQ</a>
     </nav>
 
     <!-- Icone -->
     <div class="flex items-center gap-4">
-      <span class="icon-wrapper">
-        <mat-icon fontIcon="search"></mat-icon>
-      </span>
+      <div class="relative">
+        <input
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="onSearch()"
+          placeholder="Cerca prodotti..."
+          class="border px-3 py-1 rounded-md w-64 focus:outline-none focus:ring-2 focus:ring-[#a9876e]"
+        >
+        <button
+          (click)="onSearch()"
+          class="absolute right-1 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-[#a9876e]"
+        >
+          <mat-icon>search</mat-icon>
+        </button>
+      </div>
 
       <span matBadge="0" matBadgeSize="medium" class="icon-wrapper">
         <mat-icon fontIcon="person_outline"></mat-icon>

@@ -1,0 +1,41 @@
+<div class="max-w-2xl mx-auto p-8 bg-white shadow-lg rounded-lg mt-8 mb-12">
+  <h1 class="text-3xl font-bold text-center text-[#a9876e] mb-6">Contattaci</h1>
+  <p class="text-center mb-6 text-gray-700">
+    Compila il modulo sottostante e ti risponderemo al più presto.
+  </p>
+
+  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+    <!-- Nome -->
+    <mat-form-field appearance="fill">
+      <mat-label>Nome</mat-label>
+      <input matInput placeholder="Il tuo nome" formControlName="name">
+      <mat-error *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched">
+        Il nome è obbligatorio
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Email -->
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput placeholder="La tua email" formControlName="email">
+      <mat-error *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched">
+        Inserisci una email valida
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Messaggio -->
+    <mat-form-field appearance="fill">
+      <mat-label>Messaggio</mat-label>
+      <textarea matInput placeholder="Scrivi qui il tuo messaggio" formControlName="message" rows="6"></textarea>
+      <mat-error *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched">
+        Il messaggio è obbligatorio
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Pulsante -->
+    <button mat-flat-button type="submit" class="bg-[#a9876e] text-white hover:bg-[#8a705a] py-2 px-6 rounded-lg">
+      Invia
+    </button>
+  </form>
+</div>
+

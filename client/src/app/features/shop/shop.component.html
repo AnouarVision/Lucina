@@ -1,0 +1,14 @@
+<div class="p-7">
+  <div class="flex justify-end mt-[10px]">
+    <button mat-stroked-button (click)="openFiltersDialog()" class="flex items-center gap-2">
+      <mat-icon class="text-[20px]">filter_list</mat-icon>
+      <span class="text-sm">Filtri</span>
+    </button>
+  </div>
+
+  <div class="grid grid-cols-4 gap-4 mt-4">
+    @for(product of products; track product.id){
+      <app-product-item [product]="product"></app-product-item>
+    }
+  </div>
+</div>
