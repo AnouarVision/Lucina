@@ -209,6 +209,7 @@ Base URL: `https://localhost:5001/api`
 - [.NET 9 SDK](https://dotnet.microsoft.com/download)
 - [Node.js 20+](https://nodejs.org/) and npm
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [mkcert](https://github.com/FiloSottile/mkcert) (for local HTTPS certificates)
 
 ### Environment Setup
 
@@ -244,6 +245,16 @@ Email__Smtp__UseSsl=false
 > `appsettings.Development.json` is for logging overrides only. All secrets are loaded from `.env` via DotNetEnv at startup.
 
 ### Run with Docker Compose
+
+> **SSL certificates**: The Angular dev server requires a local HTTPS certificate. Before running for the first time, generate it with:
+> ```bash
+> cd client
+> mkdir ssl
+> mkcert localhost
+> mv localhost.pem ssl/localhost.pem
+> mv localhost-key.pem ssl/localhost-key.pem
+> ```
+> If `mkcert` is not installed, follow the [mkcert installation guide](https://github.com/FiloSottile/mkcert#installation).
 
 ```bash
 # Start SQL Server + Redis
@@ -401,4 +412,3 @@ Adminer is available at **http://localhost:5090**. Connect with:
 | `WELCOME15` | 15% |
 | `KBEAUTY25` | 25% |
 | `SUMMER5` | 5% |
-
