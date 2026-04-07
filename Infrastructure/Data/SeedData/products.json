@@ -1,92 +1,92 @@
 ﻿[
   {
-    "Name": "Cosrx Snail Mucin Essence",
-    "Description": "Essenza rigenerante con bava di lumaca, ideale per idratare e riparare la pelle stressata.",
-    "Price": 23.99,
-    "PictureUrl": "/images/products/sk-cosrx1.png",
+    "Name": "Lunara Dew Essence",
+    "Description": "Essenza idratante con estratto di fiori notturni per rivitalizzare la pelle affaticata.",
+    "Price": 22.50,
+    "PictureUrl": "/images/products/sk-lunara1.png",
     "Type": "Essence",
-    "Brand": "Cosrx",
-    "QuantityInStock": 82
+    "Brand": "Lunara",
+    "QuantityInStock": 80
   },
   {
-    "Name": "Beauty of Joseon Glow Serum",
-    "Description": "Siero con propoli e niacinamide per una pelle luminosa e uniforme.",
-    "Price": 18.50,
-    "PictureUrl": "/images/products/sk-joseon1.png",
+    "Name": "Solenya Bright Serum",
+    "Description": "Siero illuminante con minerali vegetali e vitamina B3 per un incarnato uniforme.",
+    "Price": 17.90,
+    "PictureUrl": "/images/products/sk-solenya1.png",
     "Type": "Serum",
-    "Brand": "Beauty of Joseon",
-    "QuantityInStock": 75
+    "Brand": "Solenya",
+    "QuantityInStock": 72
   },
   {
-    "Name": "Isntree Hyaluronic Acid Toner",
-    "Description": "Toner idratante con 5 tipi di acido ialuronico per un'idratazione profonda.",
-    "Price": 21.00,
-    "PictureUrl": "/images/products/sk-isntree1.png",
+    "Name": "Hydralis Deep Toner",
+    "Description": "Tonico ultra idratante con complesso di minerali marini per donare freschezza e comfort.",
+    "Price": 20.00,
+    "PictureUrl": "/images/products/sk-hydralis1.png",
     "Type": "Toner",
-    "Brand": "Isntree",
-    "QuantityInStock": 68
+    "Brand": "Hydralis",
+    "QuantityInStock": 66
   },
   {
-    "Name": "Dr.Jart+ Cicapair Cream",
-    "Description": "Crema lenitiva con centella asiatica per pelli sensibili e arrossate.",
-    "Price": 34.90,
-    "PictureUrl": "/images/products/sk-drjart1.png",
+    "Name": "Veyra Calm Cream",
+    "Description": "Crema lenitiva con erbe alpine e burro vegetale, ideale per ridurre arrossamenti e tensioni.",
+    "Price": 33.50,
+    "PictureUrl": "/images/products/sk-veyra1.png",
     "Type": "Cream",
-    "Brand": "Dr.Jart+",
-    "QuantityInStock": 52
+    "Brand": "Veyra",
+    "QuantityInStock": 50
   },
   {
-    "Name": "Some By Mi AHA-BHA-PHA Miracle Toner",
-    "Description": "Tonico esfoliante delicato per pelle acneica, affina i pori e leviga la grana della pelle.",
-    "Price": 19.90,
-    "PictureUrl": "/images/products/sk-someby1.png",
+    "Name": "Nuvia Clear Toner",
+    "Description": "Tonico delicatamente esfoliante con estratti di frutti acidi naturali per una pelle liscia e pulita.",
+    "Price": 18.80,
+    "PictureUrl": "/images/products/sk-nuvia1.png",
     "Type": "Toner",
-    "Brand": "Some By Mi",
-    "QuantityInStock": 97
+    "Brand": "Nuvia",
+    "QuantityInStock": 95
   },
   {
-    "Name": "Laneige Water Sleeping Mask",
-    "Description": "Maschera notte idratante, perfetta per ricaricare la pelle durante il sonno.",
-    "Price": 27.99,
-    "PictureUrl": "/images/products/sk-laneige1.png",
+    "Name": "Elios Dream Mask",
+    "Description": "Maschera notte vellutata con acqua di loto e polifenoli, rigenera la pelle mentre dormi.",
+    "Price": 26.90,
+    "PictureUrl": "/images/products/sk-elios1.png",
     "Type": "Mask",
-    "Brand": "Laneige",
-    "QuantityInStock": 37
+    "Brand": "Elios",
+    "QuantityInStock": 35
   },
   {
-    "Name": "Innisfree Green Tea Seed Serum",
-    "Description": "Siero antiossidante con tè verde per idratare e proteggere la pelle.",
-    "Price": 22.00,
-    "PictureUrl": "/images/products/sk-innisfree1.png",
+    "Name": "Serenya Green Serum",
+    "Description": "Siero antiossidante con estratto di tè verde selvatico e semi d’uva per nutrire e proteggere la pelle.",
+    "Price": 21.50,
+    "PictureUrl": "/images/products/sk-serenya1.png",
     "Type": "Serum",
-    "Brand": "Innisfree",
-    "QuantityInStock": 32
+    "Brand": "Serenya",
+    "QuantityInStock": 30
   },
   {
-    "Name": "Mediheal N.M.F Aquaring Sheet Mask",
-    "Description": "Maschera in tessuto ultra idratante con acido ialuronico e ceramidi.",
-    "Price": 3.50,
-    "PictureUrl": "/images/products/sk-mediheal1.png",
+    "Name": "Velura Aqua Sheet Mask",
+    "Description": "Maschera in tessuto imbevuta di essenza idratante con alghe marine e acido ialuronico.",
+    "Price": 3.20,
+    "PictureUrl": "/images/products/sk-velura1.png",
     "Type": "Sheet Mask",
-    "Brand": "Mediheal",
-    "QuantityInStock": 120
+    "Brand": "Velura",
+    "QuantityInStock": 118
   },
   {
-    "Name": "Etude House SoonJung pH 5.5 Cleanser",
-    "Description": "Detergente delicato a pH bilanciato, perfetto per pelli sensibili.",
-    "Price": 11.90,
-    "PictureUrl": "/images/products/sk-etude1.png",
+    "Name": "Mirea Soft Cleanser",
+    "Description": "Detergente a pH bilanciato con avena fermentata, delicato ma efficace anche sulle pelli sensibili.",
+    "Price": 11.50,
+    "PictureUrl": "/images/products/sk-mirea1.png",
     "Type": "Cleanser",
-    "Brand": "Etude House",
-    "QuantityInStock": 64
+    "Brand": "Mirea",
+    "QuantityInStock": 62
   },
   {
-    "Name": "Banila Co Clean It Zero Balm",
-    "Description": "Balsamo struccante che si scioglie sul viso, rimuove efficacemente trucco e impurità.",
-    "Price": 19.00,
-    "PictureUrl": "/images/products/sk-banila1.png",
+    "Name": "Oryne Melt Balm",
+    "Description": "Balsamo struccante trasformabile in olio, rimuove trucco e impurità senza seccare la pelle.",
+    "Price": 18.70,
+    "PictureUrl": "/images/products/sk-oryne1.png",
     "Type": "Cleanser",
-    "Brand": "Banila Co",
-    "QuantityInStock": 87
+    "Brand": "Oryne",
+    "QuantityInStock": 85
   }
 ]

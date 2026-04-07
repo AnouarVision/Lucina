@@ -1,26 +1,26 @@
 ﻿[
   {
-    "ShortName": "GLS Express",
-    "Description": "Consegna in 24h nella penisola (48h in Sicilia e Sardegna)",
+    "ShortName": "FlashExpress",
+    "Description": "Consegna rapida in 24h nella penisola (48h in Sicilia e Sardegna)",
     "DeliveryTime": "1 Giorno (2 per isole)",
     "Price": 9.99
   },
   {
-    "ShortName": "Poste Standard",
-    "Description": "Consegna in 3‑4 giorni lavorativi, tracciata con firma",
-    "DeliveryTime": "3‑4 Giorni",
+    "ShortName": "ItalPost Standard",
+    "Description": "Consegna in 3-4 giorni lavorativi, tracciata con firma",
+    "DeliveryTime": "3-4 Giorni",
     "Price": 5.60
   },
   {
-    "ShortName": "BRT Economy",
-    "Description": "Servizio economico consegna in 24‑48h",
-    "DeliveryTime": "1‑2 Giorni",
+    "ShortName": "EcoCourier",
+    "Description": "Servizio economico con consegna in 24-48h",
+    "DeliveryTime": "1-2 Giorni",
     "Price": 7.90
   },
   {
     "ShortName": "Spedizione Gratuita",
     "Description": "Spedizione gratuita per ordini sopra €65",
-    "DeliveryTime": "3‑5 Giorni",
+    "DeliveryTime": "3-5 Giorni",
     "Price": 0.00
   }
 ]
