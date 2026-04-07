@@ -1,444 +1,404 @@
 <div align="center" style="margin-top: 30px;">
   <img src="./client/public/assets/images/logo.png" height="100px" alt="Lucina logo"/>
-  <h1>Lucina - Korean Skincare E-commerce</h1>
+  <h1>Lucina — Korean Skincare E-commerce</h1>
 </div>
 
 ---
 
 ## Overview
 
-**Lucina** is a modern e-commerce platform focused on delivering high-quality Korean skincare products to the Italian market. Built with **Angular**, **.NET Core** and **Stripe**, the project offers a full-stack implementation of an online store with an optimized shopping experience, clean architecture and enterprise-level scalability.
+> **Disclaimer**: Lucina is a fictional brand created solely for demonstration purposes. All products, prices, orders, and data presented are entirely fabricated. This project does not represent a real commercial activity.
+
+**Lucina** is a full-stack e-commerce platform focused on Korean skincare products for the Italian market. Built with **Angular 20**, **.NET 9** and **Stripe**, it provides a complete online store experience with clean architecture, role-based access, server-side coupons, Redis cart persistence and a built-in AI K-Beauty assistant.
 
 ---
 
 ## Table of Contents
-- [Overview](#overview)
 - [Features](#features)
+- [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
-- [API Documentation](#api-documentation)
-- [Live Deployment](#live-deployment)
+- [Project Structure](#project-structure)
+- [API Reference](#api-reference)
+- [Frontend Pages & Routes](#frontend-pages--routes)
 - [Quickstart](#quickstart)
   - [Requirements](#requirements)
-  - [Development Workflow](#development-workflow)
-    - [Clone the repository](#clone-the-repository)
-    - [Build and launch all containers](#build-and-launch-all-containers)
-    - [(Optional) Reset dev environment](#optional-reset-dev-environment)
+  - [Environment Setup](#environment-setup)
+  - [Run with Docker Compose](#run-with-docker-compose)
+  - [Run locally (without Docker)](#run-locally-without-docker)
 - [Development Guide](#development-guide)
-  - [Backend (ASP.NET Core)](#backend-aspnet-core)
-    - [Configuration](#configuration)
-    - [Dependencies](#dependencies)
-    - [Entity Framework Migrations](#entity-framework-migrations)
-    - [Admin User Setup](#admin-user-setup)
-    - [Run tests](#run-tests)
-    - [Database Schema](#database-schema)
-  - [Frontend (Angular + Angular Material)](#frontend-angular--angular-material)
-    - [Dependencies](#dependencies-1)
-    - [Run tests](#run-tests-1)
-    - [Build for production](#build-for-production)
-- [Production Workflow](#production-workflow)
-  - [Azure Deployment](#azure-deployment)
-    - [CI/CD Workflow Overview](#cicd-workflow-overview)
+  - [Backend](#backend-aspnet-core)
+  - [Frontend](#frontend-angular)
+- [Admin Setup](#admin-setup)
+
 ---
 
 ## Features
 
-- Complete e-commerce workflow (browsing, basket, checkout)
-- Secure login and registration using ASP.NET Identity
-- Stripe integration with EU-compliant 3D Secure payments
-- Basket persistence with Redis
-- Product filtering, sorting, searching, and pagination
-- Order creation and payment flow
-- Mobile-first responsive UI with Angular Material & Tailwind CSS
-- Clean architecture with Repository & Unit of Work patterns
-- Admin-ready backend with role-based access
-- Blog, reviews and content-ready structure
-- Cloud-deployable to Microsoft Azure
+- Full checkout flow: browsing → cart → coupon → shipping → payment → order confirmation
+- JWT authentication with role-based access (User / Admin)
+- Server-side promotional coupon system (Admin-generated, server-validated)
+- Free shipping threshold (≥ €65 on standard shipping)
+- Stripe payment integration
+- Cart persistence via Redis (synced across sessions)
+- Product filtering, sorting, searching and pagination
+- Order history with full-page detail view and printable invoice
+- AI K-Beauty assistant (Google Gemini, Italian language)
+- Mobile-first responsive UI (Angular Material + Tailwind CSS) with hamburger menu
+- Repository & Specification patterns in the backend
+- Seeded demo data (products, coupons, delivery options)
+- Newsletter subscription with welcome email (coupon code delivery)
+- Fake SMTP server for local email testing (smtp4dev)
+- Working contact form with server-side email delivery
+- **GDPR compliance**: opt-in checkbox at registration, Privacy Policy and Terms of Service pages
+- **Security hardening**: role-based Admin guards on write endpoints, IDOR protection on cart/payment, security response headers, HTTPS redirection
+- **JWT HTTP interceptor**: automatically attaches Bearer token to all API requests
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | Angular 20, Angular Material 20, Tailwind CSS 4 |
+| Backend | ASP.NET Core 9, Entity Framework Core 9 |
+| Authentication | JWT, BCrypt.Net, role claims (`Admin` / `User`) |
+| Database | SQL Server 2022 (Docker) |
+| Cache | Redis 7 (cart persistence) |
+| Payments | Stripe.net 50 |
+| Email | MailKit 4.11 (SMTP) |
+| Environment | DotNetEnv 3.1 |
+| Container | Docker Compose |
 
 ---
 
 ## Architecture
 
-```mermaid
-flowchart TD
-    US([User <br> Browser/Mobile])
-    RP[Reverse Proxy: Nginx/IIS]
-    
-    subgraph FrontendInfra[Frontend Infrastructure]
-        subgraph frontend[Container: 'angular-frontend']
-            SF[Server: Nginx]
-            BL[Builder: Angular CLI]
-            FE[Frontend: Angular SPA<br>+ Angular Material<br>+ Tailwind CSS]
-        end
-    end
-    
-    subgraph BackendInfra[Backend Infrastructure]
-        subgraph backend[Container: 'aspnetcore-api']
-            KB[Kestrel Server]
-            BE[Backend: ASP.NET Core Web API<br>+ Identity<br>+ SignalR]
-        end
-        
-        subgraph db[Container: 'database']
-            SQL[(Database: SQL Server<br>Multiple DbContext)]
-        end
-        
-        subgraph redis[Container: 'redis']
-            RD[(Cache: Redis<br>Shopping Basket)]
-        end
-        
-        subgraph payments[External Service]
-            ST[Payment Gateway: Stripe]
-        end
-        
-        subgraph cloud[Cloud Platform]
-            AZ[Azure Services<br>App Service<br>SQL Database<br>Redis Cache]
-        end
-    end
-    
-    %% User Connections
-    US -- HTTPS --> RP
-    RP -- Routes to SPA --> SF
-    RP -- API Calls --> KB
-    
-    %% Frontend Infrastructure
-    SF -- Serves --> BL
-    BL -- Builds --> FE
-    
-    %% Backend Infrastructure  
-    KB -- Hosts --> BE
-    BE -- Entity Framework --> SQL
-    BE -- Cache Access --> RD
-    BE -- Payment Processing --> ST
-    BE -- WebSocket (SignalR) --> FE
-    FE -- HTTP/WebSocket --> BE
-    
-    %% Azure Deployment
-    backend -.-> AZ
-    frontend -.-> AZ
-    db -.-> AZ
-    redis -.-> AZ
-    
-    %% Styling
-    style FrontendInfra fill:#0005
-    style BackendInfra fill:#0005
-    style frontend fill:#d6c2bd,color:#fff
-    style backend fill:#512BD4,color:#fff
-    style db fill:#CC2927,color:#fff
-    style redis fill:#FF4438,color:#fff
-    style payments fill:#635BFF,color:#fff
-    style cloud fill:#0078D4,color:#fff
-    
-    style SF fill:#009639
-    style BL fill:#DD0031
-    style FE fill:#DD0031
-    style RP fill:#009639
-    style BE fill:#512BD4
-    style KB fill:#512BD4
-    style RD fill:#FF4438
-    style SQL fill:#CC2927
-    style ST fill:#635BFF
-    style AZ fill:#0078D4
 ```
+Browser
+  └── Angular SPA (port 4200)
+        └── HTTP REST calls ──→ ASP.NET Core API (port 5001)
+                                    ├── SQL Server (port 1433)  — orders, users, products, coupons
+                                    ├── Redis (port 6379)       — cart state
+                                    └── smtp4dev (port 2525)    — SMTP relay (local dev)
+```
+
+### Solution layout
+
+```
+Lucina/
+├── API/                    # Presentation layer — controllers, DTOs, middleware, services
+├── Core/                   # Domain layer — entities, repository interfaces, specifications
+├── Infrastructure/         # Data layer — EF Core, repositories, migrations, auth service
+├── client/                 # Angular 20 SPA
+│   ├── src/app/
+│   │   ├── core/           # Services, guards, interceptors
+│   │   ├── features/       # Routed feature components
+│   │   ├── layout/         # Page-level layout components
+│   │   └── shared/         # Shared models, components
+│   └── public/assets/      # Static images and fonts
+└── docker-compose.yml      # SQL Server + Redis + smtp4dev + Adminer containers
+```
+
 ---
 
-## Tech Stack
+## API Reference
 
-| Layer         | Technology                     |
-|---------------|--------------------------------|
-| Frontend      | Angular, Angular Material, Tailwind CSS |
-| Backend       | ASP.NET Core, Entity Framework Core |
-| Authentication| ASP.NET Identity, Role-based auth |
-| Database      | SQL Server + Redis             |
-| Payments      | Stripe                         |
-| Hosting       | Azure                          |
-| Realtime      | SignalR (optional integration) |
+Base URL: `https://localhost:5001/api`
+
+### Auth — `/api/auth`
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/login` | — | Login; returns JWT |
+| POST | `/signup` | — | Register new account |
+| GET | `/profile` | [jwt] | Get current user profile |
+| PUT | `/profile` | [jwt] | Update profile |
+| GET | `/orders` | [jwt] | List user orders (paginated) |
+| GET | `/orders/{id}` | [jwt] | Order detail with items |
+
+### Products — `/api/products`
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| GET | `/` | — | List products (filter, sort, paginate) |
+| GET | `/{id}` | — | Single product |
+| GET | `/brands` | — | All brands |
+| GET | `/types` | — | All types |
+
+### Cart — `/api/cart`
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| GET | `/{userId}` | — | Get cart |
+| POST | `/{userId}/add` | — | Add item |
+| POST | `/{userId}/add-all` | — | Replace cart items |
+| DELETE | `/{userId}/remove/{productId}` | — | Remove item |
+
+### Payment — `/api/payment`
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/create-order/{userId}` | [jwt] | Create order from cart |
+| POST | `/{orderId}/process-payment` | [jwt] | Process Stripe payment |
+| GET | `/{orderId}` | [jwt] | Order details |
+| GET | `/user/{userId}` | [jwt] | All user orders |
+
+### Coupon — `/api/coupon`
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/validate` | [jwt] | Validate code (returns discount %) |
+| POST | `/redeem` | [jwt] | Increment usage counter |
+| POST | `/generate` | [admin] | Create coupon |
+| GET | `/` | [admin] | List all coupons |
+| DELETE | `/{id}` | [admin] | Deactivate coupon |
+
+### Chatbot — `/api/chatbot`
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/message` | — | Send message to AI K-Beauty assistant (Gemini) |
+
+### Contact — `/api/contact`
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/send` | — | Submit contact form; delivers email via SMTP |
+
+### Newsletter — `/api/newsletter`
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/subscribe` | — | Subscribe email; sends welcome email with `WELCOME15` coupon code |
+| DELETE | `/unsubscribe` | — | Soft-unsubscribe (sets `IsActive = false`) |
 
 ---
 
-## Architecture Overview
+## Frontend Pages & Routes
 
-- Modular architecture with **lazy-loaded Angular modules**
-- Separation of concerns via **Repository**, **Unit of Work** and **Specification Pattern**
-- Use of **multiple DbContext boundaries** for clear responsibility
-- Built-in **admin panel** features (e.g., manage products, roles)
-- Optional integrations: ERP systems, email marketing tools
+| Route | Component | Description |
+|---|---|---|
+| `/` | HomeComponent | Hero, featured categories, shop preview, testimonials |
+| `/shop` | ShopComponent | Product grid with filters, sort, search, skeleton loading |
+| `/shop/:id` | ProductDetailComponent | Product detail page |
+| `/skincare-routine` | SkincareRoutineComponent | K-Beauty routine guide |
+| `/about-us` | AboutUsComponent | Team, mission, values, timeline |
+| `/contact-us` | ContactUsComponent | Contact form |
+| `/faq` | FaqComponent | FAQ accordion |
+| `/k-beauty` | KBeautyComponent | K-Beauty educational content |
+| `/privacy-policy` | PrivacyPolicyComponent | Privacy Policy (GDPR) |
+| `/terms-of-service` | TermsOfServiceComponent | Terms of Service |
+| `/profile` | ProfileComponent | Login / register |
+| `/my-profile` | MyProfileComponent | Authenticated user dashboard (orders, wishlist) |
+| `/wishlist` | WishlistComponent | Saved items |
+| `/cart` | CartComponent | Cart with order summary, coupon, shipping picker |
+| `/checkout` | CheckoutComponent | Shipping address + payment form |
+| `/payment-processing` | PaymentProcessingComponent | Stripe payment + order confirmation |
+
+### Core Entities
+
+| Entity | Key Fields |
+|---|---|
+| `Product` | Name, Description, Price, Type, Brand, QuantityInStock, PictureUrl |
+| `User` | Name, Email, PasswordHash, Phone, Address, IsAdmin |
+| `Order` | UserId, OrderStatus, Subtotal, ShippingCost, Tax, Discount, CouponCode, Total, PaymentMethod |
+| `OrderItem` | OrderId, ProductId, ProductName, UnitPrice, Quantity |
+| `CouponCode` | Code, DiscountPercent, IsActive, MaxUses, UsedCount, ExpiresAt |
+| `DeliveryOption` | ShortName, DeliveryTime, Price |
+| `Cart` *(Redis)* | UserId, Items[] |
+| `NewsletterSubscription` | Email, SubscribedAt, IsActive |
 
 ---
+
+## Quickstart
 
 ### Requirements
 
-- **.NET 8.0 SDK**
-- **Node.js 18+** and **npm**
-- **Docker** and **Docker Compose**
-- **SQL Server** (or SQL Server LocalDB for development)
-- **Redis** (for basket persistence)
+- [.NET 9 SDK](https://dotnet.microsoft.com/download)
+- [Node.js 20+](https://nodejs.org/) and npm
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
-### Development Workflow
+### Environment Setup
 
-#### Clone the repository
+Create a `.env` file in the project root (next to `docker-compose.yml`):
+
+```env
+# Database
+DB_PASSWORD=YourStrong!Password
+
+# JWT
+JWT_KEY=your-256-bit-secret-key-here
+
+# Stripe
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+
+# Gemini (chatbot)
+GEMINI_API_KEY=AIza...
+
+# Email / SMTP
+Email__Smtp__Host=localhost
+Email__Smtp__Port=2525
+Email__Smtp__From=noreply@lucina.local
+Email__Smtp__DisplayName=Lucina
+Email__Smtp__Username=
+Email__Smtp__Password=
+Email__Smtp__UseSsl=false
+```
+
+> By default emails are captured locally by **smtp4dev** (no real sending). To deliver emails to real inboxes, switch the SMTP config to a real provider, see [Email Setup](#email-setup).
+
+> `appsettings.Development.json` is for logging overrides only. All secrets are loaded from `.env` via DotNetEnv at startup.
+
+### Run with Docker Compose
 
 ```bash
-git clone https://github.com/yourusername/lucina-ecommerce.git
-cd lucina-ecommerce
-```
+# Start SQL Server + Redis
+docker compose up -d
 
-#### Environment Configuration
-
-Before running the application, configure the necessary environment variables and settings for both backend and frontend.
-
-##### Backend Configuration (`appsettings.Development.json`)
-
-Create `appsettings.Development.json` in the `API` project root:
-
-```json
-{
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Information"
-    }
-  },
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=<yourServer>,1433;Database=<yourDatabase>;User Id=<yourId>;Password=<yourPassword>;TrustServerCertificate=True"
-  },
-  "StripeSettings": {
-    "PublishableKey": "<your-publishable-key>",
-    "SecretKey": "<your-secret-key>"
-  }
-}
-```
-
-Replace placeholders with your actual credentials.
-
-##### Frontend Configuration (`environment.ts`)
-
-Configure `client/src/environments/environment.ts`:
-
-```typescript
-export const environment = {
-  production: false,
-  apiUrl: 'https://localhost:5001/api/',
-  stripePublicKey: '<your-publishable-key>'
-};
-```
-
-#### Set up the backend
-
-```bash
+# Apply migrations and start API
 cd API
-dotnet restore
-dotnet ef database update
+dotnet ef database update --project ../Infrastructure --startup-project .
 dotnet run
-```
 
-The API will be available at `https://localhost:5001`
-
-#### Set up the frontend
-
-```bash
+# In a separate terminal, start Angular
 cd client
 npm install
 ng serve
 ```
 
-The Angular app will be available at `http://localhost:4200`
+| Service | URL |
+|---|---|
+| Angular app | http://localhost:4200 |
+| API | https://localhost:5001 |
+| Swagger | https://localhost:5001/swagger |
+| smtp4dev (email inbox) | http://localhost:5080 |
+| Adminer (DB GUI) | http://localhost:5090 |
 
-#### Set up Redis
+### Run locally (without Docker)
 
-For basket persistence, you need Redis running. You can use Docker:
+If you have SQL Server and Redis installed locally, update the connection strings in `appsettings.json` accordingly, then follow the same steps above.
 
-```bash
-docker run --name redis -p 6379:6379 -d redis:alpine
+---
+
+## Email Setup
+
+In development, all outgoing emails are intercepted by **smtp4dev**, a local fake SMTP server. No emails reach real inboxes, but you can inspect them at **http://localhost:5080**.
+
+To send real emails, update the SMTP block in `.env`:
+
+**Gmail** (requires a [Google App Password](https://myaccount.google.com/apppasswords)):
+```env
+Email__Smtp__Host=smtp.gmail.com
+Email__Smtp__Port=587
+Email__Smtp__From=your@gmail.com
+Email__Smtp__Username=your@gmail.com
+Email__Smtp__Password=xxxx-xxxx-xxxx-xxxx
+Email__Smtp__UseSsl=false
 ```
 
-Or for SQL Server in Docker (development):
+**Other providers** (Brevo, Resend, Mailgun, etc.) work the same way, just replace host, port and credentials.
 
-```bash
-docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=<yourPassword>" -p 1433:1433 --name sqlserver -d mcr.microsoft.com/mssql/server
-```
-
-#### Build and launch all containers
-
-```bash
-# Build and start all services
-docker-compose up --build
-
-# Or run in detached mode
-docker-compose up -d --build
-```
-
-The application will be available at:
-- **Frontend**: http://localhost:4200
-- **Backend API**: https://localhost:5001
-- **Swagger UI**: https://localhost:5001/swagger
-
-#### (Optional) Reset dev environment
-
-```bash
-# Stop all containers and remove volumes
-docker-compose down -v
-
-# Remove all images
-docker-compose down --rmi all
-
-# Clean rebuild
-docker-compose up --build --force-recreate
-```
-
-### Important Notes
-
-- The backend runs on port **5001** by default (HTTPS). Make sure it's not blocked by firewall or antivirus software.
-- **Redis** must be running for shopping cart persistence.
-- For development with **SQL Server in Docker**, remember to expose port **1433** and accept TCP connections.
+---
 
 ## Development Guide
 
 ### Backend (ASP.NET Core)
 
-#### Configuration
-
-Configuration is managed through `appsettings.json` and environment variables:
-
 ```bash
-# Navigate to API project
-cd src/API
-
-# Copy example configuration
-cp appsettings.example.json appsettings.Development.json
-```
-
-Key configuration sections:
-- **ConnectionStrings**: Database and Redis connections
-- **Stripe**: Payment gateway settings
-- **Identity**: Authentication configuration
-- **Cors**: Cross-origin request settings
-
-#### Dependencies
-
-```bash
-# Restore NuGet packages
+# Restore packages
 dotnet restore
 
-# Add new package example
-dotnet add package PackageName
+# Create a new migration
+dotnet ef migrations add <MigrationName> --project Infrastructure --startup-project API
+
+# Apply migrations
+dotnet ef database update --project Infrastructure --startup-project API
+
+# Drop database (dev only)
+dotnet ef database drop --project Infrastructure --startup-project API
 ```
 
-#### Entity Framework Migrations
+### Frontend (Angular)
 
 ```bash
-# Create new migration
-dotnet ef migrations add MigrationName -p Infrastructure -s API
-
-# Update database
-dotnet ef database update -p Infrastructure -s API
-
-# Drop database (development only)
-dotnet ef database drop -p Infrastructure -s API
-```
-
-#### Admin User Setup
-
-```bash
-# Run the application and navigate to
-# https://localhost:5001/api/account/seed-admin
-# This will create default admin user (development only)
-```
-
-#### Run tests
-
-```bash
-# Run all tests
-dotnet test
-
-# Run tests with coverage
-dotnet test --collect:"XPlat Code Coverage"
-
-# Run specific test project
-dotnet test tests/UnitTests
-```
-
-#### Database Schema
-
-Generate database schema documentation:
-
-```bash
-# Using Entity Framework Power Tools or
-# dotnet ef dbcontext scaffold for reverse engineering
-```
-
-### Frontend (Angular + Angular Material)
-
-#### Dependencies
-
-```bash
-# Navigate to client app
 cd client
 
 # Install dependencies
 npm install
 
-# Add new dependency
-npm install package-name
-```
+# Serve with hot reload
+ng serve
 
-#### Run tests
-
-```bash
-# Run unit tests
-ng test
-
-# Run unit tests with coverage
-ng test --code-coverage
-
-# Run e2e tests
-ng e2e
-
-# Lint code
-ng lint
-```
-
-#### Build for production
-
-```bash
 # Build for production
 ng build --configuration production
 
-# Analyze bundle size
-ng build --stats-json
-npx webpack-bundle-analyzer dist/stats.json
+# Run unit tests
+ng test
 ```
 
-## Production Workflow
+---
 
-### Azure Deployment
+## Admin Setup
 
-The application is deployed to Microsoft Azure using the following services:
+By default all registered users are standard users. To grant admin access:
 
-- **Azure App Service**: Hosts the ASP.NET Core API
-- **Azure Static Web Apps**: Hosts the Angular frontend
-- **Azure SQL Database**: Production database
-- **Azure Cache for Redis**: Caching layer
-- **Azure Application Gateway**: Load balancing and SSL termination
+1. Register a user via `/profile` or `POST /api/auth/signup`
+2. Run the following SQL against the database:
 
-#### CI/CD Workflow Overview
-
-1. **Source Control**: Git push triggers pipeline
-2. **Build Stage**: 
-   - Build ASP.NET Core API
-   - Build Angular application
-   - Run unit tests
-3. **Package Stage**: Create deployment artifacts
-4. **Deploy Stage**:
-   - Deploy API to Azure App Service
-   - Deploy frontend to Azure Static Web Apps
-   - Run database migrations
-5. **Post-Deployment**: Run integration tests
-
-```bash
-# Deploy using Azure CLI
-az webapp deployment source config-zip \
-  --resource-group myResourceGroup \
-  --name myAppName \
-  --src deployment.zip
+```sql
+UPDATE Users SET IsAdmin = 1 WHERE Email = 'your@email.com';
 ```
 
-For detailed deployment instructions, see the [deployment guide](docs/DEPLOYMENT.md).
+3. Log out and back in, the JWT will include the `Admin` role claim.
+
+Admin users can then call the `/api/coupon/generate`, list and deactivate endpoints.
+
+---
+
+## Security & Compliance
+
+### Authentication & Authorization
+- All write operations on products (`POST`/`PUT`/`DELETE /api/products`) require `[Authorize(Roles = "Admin")]`
+- Cart endpoints require `[Authorize]` and enforce ownership checks (users can only access their own cart)
+- Payment endpoints are IDOR-protected: orders are always verified against the authenticated user's ID
+- `UpdateOrderStatus` is restricted to Admin only
+- A global **JWT HTTP interceptor** (`auth.interceptor.ts`) automatically attaches the Bearer token to every outbound API request
+
+### Security Headers
+`Program.cs` sets the following response headers on every request:
+
+| Header | Value |
+|---|---|
+| `X-Content-Type-Options` | `nosniff` |
+| `X-Frame-Options` | `DENY` |
+| `X-XSS-Protection` | `1; mode=block` |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` |
+
+HTTPS redirection is enforced in all environments.
+
+### Error Handling
+- In production, `ExceptionMiddleware` returns a generic `"An unexpected error occurred"` message, no stack traces or internal details are leaked
+- `AuthService` returns a unified `"Invalid credentials"` message for both wrong email and wrong password, preventing user enumeration
+
+### GDPR Compliance
+- Registration form includes a mandatory **GDPR opt-in checkbox** linking to the Privacy Policy and Terms of Service
+- `/privacy-policy` and `/terms-of-service` are standalone public pages
+- Newsletter subscriptions store only email + timestamp; unsubscribe sets `IsActive = false` (soft delete)
+
+
+### Adminer (Database GUI)
+
+Adminer is available at **http://localhost:5090**. Connect with:
+
+| Field | Value |
+|---|---|
+| System | MS SQL (beta) |
+| Server | `sql,1433` |
+| Username | `sa` |
+| Password | value of `MSSQL_SA_PASSWORD` in `.env` |
+| Database | `LucinaDb` |
+
+### Demo Coupons (seeded)
+
+| Code | Discount |
+|---|---|
+| `LUCINA10` | 10% |
+| `LUCINA20` | 20% |
+| `WELCOME15` | 15% |
+| `KBEAUTY25` | 25% |
+| `SUMMER5` | 5% |
+
