@@ -42,6 +42,8 @@ ScaffoldingReadMe.txt
 CodeCoverage/
 .env
 Folder.DotSettings.user
+idea/
+.idea/
 
 # MSBuild Binary and Structured Log
 *.binlog

@@ -1,0 +1,106 @@
+<div class="cart-page min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-4 py-4">
+      <div class="flex items-center justify-between">
+        <h1 class="text-3xl font-bold text-gray-800">Carrello</h1>
+        <div class="text-sm text-gray-600">
+          <span class="font-semibold text-[#a9876e]">{{ itemCount }}</span> articolo(i)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    @if (errorMessage()) {
+      <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    @if (isLoading()) {
+      <div class="flex justify-center items-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#a9876e]"></div>
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- List of articles -->
+        <div class="lg:col-span-2">
+          @if (cart().items.length > 0) {
+            <div class="space-y-4">
+              @for (item of pagedItems; track item.productId) {
+                <app-cart-item
+                  [item]="item"
+                  (remove)="removeItem(item.productId)"
+                  (quantityChange)="updateQuantity(item.productId, $event)">
+                </app-cart-item>
+              }
+            </div>
+
+            <!-- Pagination -->
+            @if (totalPages > 1) {
+              <div class="flex justify-center items-center gap-4 mt-6">
+                <button
+                  (click)="prevPage()"
+                  [disabled]="!hasPrevPage"
+                  class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-[#a9876e] text-[#a9876e] transition
+                         hover:bg-[#a9876e] hover:text-white
+                         disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#a9876e]">
+                  <mat-icon class="text-[20px] leading-none">chevron_left</mat-icon>
+                </button>
+
+                <span class="px-5 py-2 rounded-full bg-[#a9876e] text-white text-sm font-semibold shadow">
+                  {{ pageIndex }} / {{ totalPages }}
+                </span>
+
+                <button
+                  (click)="nextPage()"
+                  [disabled]="!hasNextPage"
+                  class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-[#a9876e] text-[#a9876e] transition
+                         hover:bg-[#a9876e] hover:text-white
+                         disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#a9876e]">
+                  <mat-icon class="text-[20px] leading-none">chevron_right</mat-icon>
+                </button>
+              </div>
+            }
+
+            <!-- Cart Actions -->
+            <div class="mt-6 flex gap-4">
+              <button
+                (click)="continueShopping()"
+                class="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:border-gray-400 transition">
+                Continua lo shopping
+              </button>
+              <button
+                (click)="clearCart()"
+                class="flex-1 px-6 py-3 border-2 border-red-300 text-red-700 rounded-lg font-semibold hover:bg-red-50 transition">
+                Svuota carrello
+              </button>
+            </div>
+          } @else {
+            <div class="text-center py-12 bg-white rounded-lg shadow-sm">
+              <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              <h2 class="text-2xl font-bold text-gray-700 mb-2">Il tuo carrello è vuoto</h2>
+              <p class="text-gray-500 mb-6">Non hai ancora aggiunto nessun prodotto al carrello.</p>
+              <div class="flex justify-center">
+                <button
+                  (click)="continueShopping()"
+                  class="px-6 py-3 bg-[#a9876e] text-white rounded-lg font-semibold hover:bg-[#917a65] transition flex items-center justify-center gap-2">
+                  <mat-icon>shopping_bag</mat-icon>
+                  Scopri i nostri prodotti
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Order Summary (sidebar) -->
+        <div class="lg:col-span-1 self-start">
+          <app-order-summary></app-order-summary>
+        </div>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,153 @@
+.cart-item-wrapper {
+  transition: all 0.3s ease-in-out;
+
+  &.removing {
+    animation: slideOut 0.3s ease-in-out forwards;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+.cart-item-container {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1rem;
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+}
+
+.cart-item-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    border-radius: 0.5rem;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.cart-item-details {
+  min-width: 200px;
+
+  h3 {
+    margin-bottom: 0.25rem;
+    color: #1f2937;
+  }
+
+  p {
+    color: #6b7280;
+  }
+}
+
+.cart-item-quantity {
+  display: flex;
+  align-items: center;
+}
+
+.cart-item-total {
+  text-align: right;
+  min-width: 120px;
+}
+
+.cart-item-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 1024px) {
+  .cart-item-container {
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+
+    .cart-item-image {
+      grid-column: 1;
+      grid-row: 1 / 3;
+    }
+
+    .cart-item-details {
+      grid-column: 2;
+      grid-row: 1;
+      min-width: 150px;
+    }
+
+    .cart-item-quantity {
+      grid-column: 2;
+      grid-row: 2;
+      justify-self: start;
+    }
+
+    .cart-item-total {
+      grid-column: 1 / 3;
+      grid-row: 3;
+      text-align: left;
+      margin-top: 1rem;
+    }
+
+    .cart-item-remove {
+      grid-column: 2;
+      grid-row: 2;
+      justify-self: end;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .cart-item-container {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 0.75rem;
+
+    .cart-item-image {
+      grid-column: 1;
+      grid-row: 1;
+      display: flex;
+      justify-content: flex-start;
+
+      img {
+        width: 80px;
+        height: 80px;
+      }
+    }
+
+    .cart-item-details {
+      grid-column: 1;
+      grid-row: 1;
+      margin-left: 100px;
+    }
+
+    .cart-item-quantity,
+    .cart-item-total,
+    .cart-item-remove {
+      grid-column: 1;
+    }
+
+    .cart-item-total {
+      text-align: left;
+      margin-top: 0.5rem;
+    }
+  }
+}
