@@ -1,0 +1,47 @@
+.payment-processing-page {
+  background: linear-gradient(135deg, #f0f9ff 0%, #f3e8ff 100%);
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+circle {
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (max-width: 640px) {
+  .payment-processing-page {
+    padding: 1rem;
+  }
+
+  .max-w-md {
+    margin: auto;
+  }
+}

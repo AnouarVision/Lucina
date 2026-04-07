@@ -1,0 +1,146 @@
+<div class="order-summary-container">
+  <div class="bg-white rounded-lg shadow-lg p-6">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800">Riepilogo ordine</h2>
+
+    <!-- Free shipping progress -->
+    @if (!isFreeShipping) {
+      <div class="mb-5 p-3 bg-[#f7f1eb] rounded-xl border border-[#dcc6af]">
+        <p class="text-xs text-gray-600 mb-2 flex items-center gap-1">
+          <mat-icon class="text-[14px] text-[#a9876e]">local_shipping</mat-icon>
+          Aggiungi <strong class="text-[#a9876e] mx-1">€ {{ amountToFreeShipping | number:'1.2-2' }}</strong> per la spedizione gratuita!
+        </p>
+        <div class="w-full bg-gray-200 rounded-full h-1.5">
+          <div class="bg-[#a9876e] h-1.5 rounded-full transition-all duration-500"
+               [style.width.%]="(subtotal / FREE_SHIPPING_THRESHOLD) * 100"></div>
+        </div>
+      </div>
+    } @else {
+      <div class="mb-5 p-3 bg-green-50 rounded-xl border border-green-200 flex items-center gap-2">
+        <mat-icon class="text-green-600 text-[18px]">check_circle</mat-icon>
+        <p class="text-sm text-green-700 font-medium">Spedizione standard gratuita applicata!</p>
+      </div>
+    }
+
+    <!-- Shipping Options -->
+    <div class="mb-6 pb-6 border-b border-gray-200">
+      <h3 class="text-lg font-semibold mb-3 text-gray-700">Opzioni di spedizione</h3>
+      <div class="space-y-2">
+        @for (option of shippingOptions; track option.id) {
+          <label class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition"
+                 [class.bg-amber-50]="selectedShippingId() === option.id">
+            <input
+              type="radio"
+              name="shipping"
+              [value]="option.id"
+              [checked]="selectedShippingId() === option.id"
+              (change)="selectedShippingId.set(option.id)"
+              class="w-4 h-4 text-[#a9876e]">
+            <span class="ml-3 flex-1">
+              <span class="block font-medium text-gray-800">{{ option.name }}</span>
+              <span class="text-sm text-gray-500">{{ option.days }} giorn(i)</span>
+            </span>
+            <span class="font-semibold text-gray-800">
+              @if (isFreeShipping && option.id === 'standard') {
+                <span class="line-through text-gray-400 text-sm mr-1">€ {{ option.price | number:'1.2-2' }}</span>
+                <span class="text-green-600">Gratis</span>
+              } @else {
+                € {{ option.price | number:'1.2-2' }}
+              }
+            </span>
+          </label>
+        }
+      </div>
+    </div>
+
+    <!-- Coupon Code -->
+    <div class="mb-6 pb-6 border-b border-gray-200">
+      <h3 class="text-lg font-semibold mb-3 text-gray-700">Codice promozionale</h3>
+
+      @if (!appliedCoupon()) {
+        <div class="flex gap-2">
+          <input
+            type="text"
+            [ngModel]="couponInput()"
+            (ngModelChange)="couponInput.set($event)"
+            (keyup.enter)="applyCoupon()"
+            placeholder="Inserisci codice promozionale"
+            class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a9876e] text-sm uppercase">
+          <button
+            (click)="applyCoupon()"
+            [disabled]="couponLoading()"
+            class="px-4 py-2 bg-[#a9876e] text-white rounded-lg hover:bg-[#8b6f4f] transition text-sm font-medium
+                   disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1">
+            @if (couponLoading()) {
+              <mat-icon class="text-[16px] animate-spin">refresh</mat-icon>
+            } @else {
+              Applica
+            }
+          </button>
+        </div>
+        @if (couponError()) {
+          <p class="text-xs text-red-500 mt-2 flex items-center gap-1">
+            <mat-icon class="text-[14px]">error_outline</mat-icon>
+            {{ couponError() }}
+          </p>
+        }
+      } @else {
+        <div class="bg-green-50 border border-green-200 rounded-lg p-3 flex items-center justify-between">
+          <div>
+            <p class="font-semibold text-green-800">{{ appliedCoupon() }}</p>
+            <p class="text-sm text-green-700">Sconto del {{ discountPercent() }}%</p>
+          </div>
+          <button (click)="removeCoupon()" class="text-green-600 hover:text-green-800 font-semibold text-sm">
+            Rimuovi
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Cost Summary -->
+    <div class="space-y-3">
+      <div class="flex justify-between text-gray-700">
+        <span>Totale prodotti:</span>
+        <span>€ {{ subtotal | number:'1.2-2' }}</span>
+      </div>
+
+      @if (discountPercent() > 0) {
+        <div class="flex justify-between text-green-600 font-semibold">
+          <span>Sconto ({{ discountPercent() }}%):</span>
+          <span>-€ {{ discountAmount | number:'1.2-2' }}</span>
+        </div>
+      }
+
+      <div class="flex justify-between text-gray-700">
+        <span>Spedizione:</span>
+        @if (shippingCost === 0 && cart().items.length > 0) {
+          <span class="text-green-600 font-semibold">Gratuita</span>
+        } @else {
+          <span>€ {{ shippingCost | number:'1.2-2' }}</span>
+        }
+      </div>
+
+      <div class="flex justify-between text-gray-700">
+        <span>Tasse (10%):</span>
+        <span>€ {{ tax | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="border-t border-gray-300 pt-3 flex justify-between font-bold text-lg">
+        <span class="text-gray-800">Totale:</span>
+        <span class="text-[#a9876e]">€ {{ total | number:'1.2-2' }}</span>
+      </div>
+    </div>
+
+    <button
+      (click)="proceedToCheckout()"
+      [disabled]="isEmpty"
+      class="mt-6 w-full bg-gradient-to-r from-[#a9876e] to-[#89663e] text-white py-3 rounded-lg
+             hover:from-[#98765d] hover:to-[#78552d] transition font-semibold shadow-md
+             disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:from-[#a9876e] disabled:hover:to-[#89663e]">
+      @if (isEmpty) {
+        Carrello vuoto
+      } @else {
+        Procedi al pagamento
+      }
+    </button>
+  </div>
+</div>

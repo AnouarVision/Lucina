@@ -1,0 +1,25 @@
+.order-summary-container {
+  animation: slideIn 0.3s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .order-summary-container {
+    padding: 1rem;
+  }
+
+  button {
+    font-size: 0.9rem;
+    padding: 0.75rem !important;
+  }
+}

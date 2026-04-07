@@ -4,11 +4,35 @@
     <p class="text-lg mb-8 opacity-90">
       Iscriviti alla nostra newsletter e ricevi il <strong>10% di sconto</strong> sul primo ordine
     </p>
-    <div class="flex max-w-md mx-auto gap-3">
-      <input type="email" placeholder="La tua email" class="flex-1 px-4 py-3 rounded-full text-black border border-[#dcc6af] focus:outline-none bg-[#f7f1eb]" >
-      <button class="px-6 py-3 bg-[#dcc6af] text-black font-semibold rounded-full transform transition-transform duration-300 hover:scale-105 hover:bg-[#cbb296]">
-        Iscriviti
-      </button>
-    </div>
+
+    @if (successMessage()) {
+      <div class="max-w-md mx-auto bg-green-50 border border-green-200 text-green-800 rounded-full px-6 py-3 text-sm font-medium">
+        {{ successMessage() }}
+      </div>
+    } @else {
+      <div class="flex max-w-md mx-auto gap-3">
+        <input
+          type="email"
+          [(ngModel)]="email"
+          (keyup.enter)="subscribe()"
+          placeholder="La tua email"
+          [disabled]="loading()"
+          class="flex-1 px-4 py-3 rounded-full text-black border border-[#dcc6af] focus:outline-none bg-[#f7f1eb] disabled:opacity-60">
+        <button
+          (click)="subscribe()"
+          [disabled]="loading()"
+          class="px-6 py-3 bg-[#dcc6af] text-black font-semibold rounded-full transform transition-transform duration-300
+                 hover:scale-105 hover:bg-[#cbb296] disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2">
+          @if (loading()) {
+            <span class="w-4 h-4 border-2 border-black/40 border-t-black rounded-full animate-spin inline-block"></span>
+          } @else {
+            Iscriviti
+          }
+        </button>
+      </div>
+      @if (errorMessage()) {
+        <p class="mt-3 text-sm text-red-600">{{ errorMessage() }}</p>
+      }
+    }
   </div>
 </section>

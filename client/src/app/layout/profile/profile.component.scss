@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+button {
+  transition: all 300ms ease;
+}
+
+input {
+  transition: border-color 300ms ease;
+
+  &:focus {
+    border-color: #a9876e;
+  }
+}

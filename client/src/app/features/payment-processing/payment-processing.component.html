@@ -1,0 +1,137 @@
+<div class="payment-processing-page min-h-screen bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center p-4">
+  <div class="max-w-md w-full">
+    <div class="bg-white rounded-lg shadow-2xl p-8">
+      @if (processingStatus() === 'processing') {
+        <div class="text-center">
+          <div class="mb-6 flex justify-center">
+            <div class="relative w-24 h-24">
+              <svg class="w-full h-full" viewBox="0 0 100 100">
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="none"
+                  stroke="#e5e7eb"
+                  stroke-width="3"/>
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="none"
+                  stroke="#a9876e"
+                  stroke-width="3"
+                  stroke-dasharray="282.6"
+                  stroke-dashoffset="282.6"
+                  [style.--progress]="progress() + '%'"
+                  style="animation: dash 2s linear infinite; stroke-linecap: round;"/>
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="text-sm font-bold text-gray-700">{{ Math.round(progress()) }}%</span>
+              </div>
+            </div>
+          </div>
+
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">Elaborazione pagamento</h2>
+
+          @if (paymentMethod() === 'card') {
+            <p class="text-gray-600 mb-6">Elaborazione carta di credito in corso...</p>
+          } @else {
+            <p class="text-gray-600 mb-6">Autenticazione Apple Pay in corso...</p>
+          }
+
+          <div class="bg-amber-50 rounded-lg p-4 mb-6 text-sm text-gray-700 space-y-2">
+            <div class="flex items-center gap-3">
+              <mat-icon class="text-[#a9876e] text-[20px]">lock</mat-icon>
+              <span>Connessione sicura con la banca</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <mat-icon class="text-[#a9876e] text-[20px]">check_circle</mat-icon>
+              <span>Verifica dei dati di pagamento</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <mat-icon class="text-[#a9876e] text-[20px]">hourglass_top</mat-icon>
+              <span>Completamento della transazione</span>
+            </div>
+          </div>
+
+          <p class="text-xs text-gray-500">Non chiudere questa pagina</p>
+        </div>
+      }
+
+      @if (processingStatus() === 'success') {
+        <div class="text-center">
+          <div class="mb-6 flex justify-center">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center animate-pulse">
+              <svg class="w-12 h-12 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+          </div>
+
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">Pagamento confermato!</h2>
+          <p class="text-gray-600 mb-6">
+            @if (paymentMethod() === 'card') {
+              La tua carta è stata elaborata con successo.
+            } @else {
+              Pagamento Apple Pay completato con successo.
+            }
+          </p>
+
+          <div class="bg-green-50 rounded-lg p-4 mb-6 text-sm">
+            <p class="text-green-800">
+              <span class="font-semibold">Ordine #{{ orderId }}</span><br>
+              Riceverai una conferma via email
+            </p>
+          </div>
+
+          <p class="text-xs text-gray-500 mb-6">Reindirizzamento in corso...</p>
+
+          <button
+            (click)="goHome()"
+            class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition">
+            Vai alla home
+          </button>
+        </div>
+      }
+
+      @if (processingStatus() === 'error') {
+        <div class="text-center">
+          <div class="mb-6 flex justify-center">
+            <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center">
+              <svg class="w-12 h-12 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+          </div>
+
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">Pagamento non elaborato</h2>
+          <p class="text-gray-600 mb-6">{{ errorMessage() }}</p>
+
+          <div class="bg-red-50 rounded-lg p-4 mb-6 text-sm text-red-800">
+            <p>Verifica i dati e riprova, oppure contatta il tuo istituto bancario.</p>
+          </div>
+
+          <div class="flex gap-3">
+            <button
+              (click)="retryPayment()"
+              class="flex-1 bg-[#a9876e] text-white py-3 rounded-lg font-semibold hover:bg-[#8b6f4f] transition">
+              Riprova
+            </button>
+            <button
+              (click)="goBack()"
+              class="flex-1 border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-semibold hover:border-gray-400 transition">
+              Indietro
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="text-center mt-6 text-sm text-gray-600">
+      <div class="flex items-center justify-center gap-2">
+        <mat-icon class="text-[18px] text-gray-500">credit_card</mat-icon>
+        <p>Pagamento sicuro - SSL Encrypted</p>
+      </div>
+    </div>
+  </div>
+</div>

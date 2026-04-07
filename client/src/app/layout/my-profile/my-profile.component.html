@@ -1,0 +1,533 @@
+<div class="bg-gradient-to-r from-[#a9876e] to-[#8b6f4f] text-white py-16 px-4">
+  <div class="max-w-4xl mx-auto text-center">
+    <h1 class="text-4xl font-bold mb-4">Il tuo profilo</h1>
+    <p class="text-lg opacity-90">Gestisci i tuoi dati personali</p>
+  </div>
+</div>
+
+<div class="min-h-screen bg-[#f7f1eb] py-12 px-4">
+  <div class="max-w-3xl mx-auto">
+    @if (isLoading) {
+      <div class="bg-white rounded-lg shadow-lg p-12 text-center">
+        <div class="inline-block">
+          <div class="w-12 h-12 border-4 border-[#a9876e] border-t-transparent rounded-full animate-spin"></div>
+        </div>
+        <p class="mt-4 text-gray-600">Caricamento profilo...</p>
+      </div>
+    }
+
+    @if (error && !isLoading) {
+      <div class="bg-white rounded-lg shadow-lg p-8">
+        <div class="p-4 bg-red-50 border border-red-200 rounded text-red-700">
+          {{ error }}
+        </div>
+      </div>
+    }
+
+    @if (userProfile && !isLoading && !error) {
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-[#a9876e] to-[#8b6f4f] text-white p-8">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-16 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
+                <span class="text-black text-2xl font-bold">{{ userProfile.name.charAt(0).toUpperCase() }}</span>
+              </div>
+              <div>
+                <h2 class="text-3xl font-bold">{{ userProfile.name }}</h2>
+                <p class="text-white text-opacity-90">{{ userProfile.email }}</p>
+              </div>
+            </div>
+            @if (!isEditing) {
+              <button
+                mat-icon-button
+                (click)="toggleEdit()"
+                class="bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full p-2"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+            }
+          </div>
+        </div>
+
+        <mat-tab-group [(selectedIndex)]="activeTab" class="bg-white">
+          <mat-tab label="Informazioni Personali">
+            @if (!isEditing) {
+              <div class="p-8 space-y-8">
+                <div>
+                  <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                    <mat-icon class="text-[#a9876e]">person</mat-icon>
+                    Informazioni Personali
+                  </h3>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-[#f7f1eb] rounded-lg">
+                      <p class="text-sm text-gray-600 mb-1">Nome Completo</p>
+                      <p class="text-lg font-semibold text-gray-800">{{ userProfile.name }}</p>
+                    </div>
+                    <div class="p-4 bg-[#f7f1eb] rounded-lg">
+                      <p class="text-sm text-gray-600 mb-1">Email</p>
+                      <p class="text-lg font-semibold text-gray-800">{{ userProfile.email }}</p>
+                    </div>
+                    @if (userProfile.phone) {
+                      <div class="p-4 bg-[#f7f1eb] rounded-lg">
+                        <p class="text-sm text-gray-600 mb-1">Telefono</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ userProfile.phone }}</p>
+                      </div>
+                    }
+                    @if (userProfile.nationality) {
+                      <div class="p-4 bg-[#f7f1eb] rounded-lg">
+                        <p class="text-sm text-gray-600 mb-1">Nazionalità</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ userProfile.nationality }}</p>
+                      </div>
+                    }
+                    @if (userProfile.address) {
+                      <div class="p-4 bg-[#f7f1eb] rounded-lg">
+                        <p class="text-sm text-gray-600 mb-1">Indirizzo</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ userProfile.address }}</p>
+                      </div>
+                    }
+                    @if (userProfile.city) {
+                      <div class="p-4 bg-[#f7f1eb] rounded-lg">
+                        <p class="text-sm text-gray-600 mb-1">Città</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ userProfile.city }}</p>
+                      </div>
+                    }
+                    @if (userProfile.country) {
+                      <div class="p-4 bg-[#f7f1eb] rounded-lg">
+                        <p class="text-sm text-gray-600 mb-1">Paese</p>
+                        <p class="text-lg font-semibold text-gray-800">{{ userProfile.country }}</p>
+                      </div>
+                    }
+                  </div>
+
+                  @if (userProfile.bio) {
+                    <div class="mt-4 p-4 bg-[#f7f1eb] rounded-lg">
+                      <p class="text-sm text-gray-600 mb-2">Bio</p>
+                      <p class="text-lg text-gray-800">{{ userProfile.bio }}</p>
+                    </div>
+                  }
+                </div>
+
+                <div class="border-t pt-8">
+                  <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                    <mat-icon class="text-[#a9876e]">shopping_cart</mat-icon>
+                    Azioni
+                  </h3>
+                  <div class="flex gap-4 flex-wrap">
+                    <button
+                      (click)="goToCheckout()"
+                      class="flex-1 min-w-[200px] bg-[#a9876e] text-white py-3 rounded-lg font-semibold hover:bg-[#8b6f4f] transition"
+                    >
+                      Vai al Checkout
+                    </button>
+                    <button
+                      (click)="logout()"
+                      class="flex-1 min-w-[200px] border-2 border-[#a9876e] text-[#a9876e] py-3 rounded-lg font-semibold hover:bg-amber-50 transition"
+                    >
+                      Esci
+                    </button>
+                  </div>
+                </div>
+              </div>
+            }
+
+            @if (isEditing) {
+              <form [formGroup]="editForm" class="p-8 space-y-6">
+                <div class="space-y-4">
+                  <h3 class="text-lg font-semibold text-gray-800">Informazioni Personali</h3>
+
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Nome Completo</mat-label>
+                    <input matInput formControlName="name" required>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Telefono</mat-label>
+                    <input matInput formControlName="phone" type="tel">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Nazionalità</mat-label>
+                    <input matInput formControlName="nationality">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Indirizzo</mat-label>
+                    <input matInput formControlName="address">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Città</mat-label>
+                    <input matInput formControlName="city">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Paese</mat-label>
+                    <input matInput formControlName="country">
+                  </mat-form-field>
+
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Bio</mat-label>
+                    <textarea matInput formControlName="bio" rows="4"></textarea>
+                  </mat-form-field>
+                </div>
+
+                <div class="border-t pt-6 flex gap-4">
+                  <button
+                    type="button"
+                    (click)="saveProfile()"
+                    [disabled]="isSaving || editForm.invalid"
+                    class="flex-1 bg-[#a9876e] text-white py-3 rounded-lg font-semibold hover:bg-[#8b6f4f] transition disabled:opacity-50"
+                  >
+                    {{ isSaving ? 'Salvataggio...' : 'Salva Profilo' }}
+                  </button>
+                  <button
+                    type="button"
+                    (click)="toggleEdit()"
+                    [disabled]="isSaving"
+                    class="flex-1 border-2 border-[#a9876e] text-[#a9876e] py-3 rounded-lg font-semibold hover:bg-amber-50 transition disabled:opacity-50"
+                  >
+                    Annulla
+                  </button>
+                </div>
+              </form>
+            }
+          </mat-tab>
+
+          <mat-tab label="I miei Ordini">
+            <div class="p-8">
+              @if (isLoadingOrders) {
+                <div class="text-center py-12">
+                  <div class="inline-block">
+                    <div class="w-12 h-12 border-4 border-[#a9876e] border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                  <p class="mt-4 text-gray-600">Caricamento ordini...</p>
+                </div>
+              }
+
+              @if (!isLoadingOrders && orders.length === 0) {
+                <div class="text-center py-12">
+                  <mat-icon class="text-6xl text-gray-300 mb-4">shopping_bag</mat-icon>
+                  <h3 class="text-xl font-semibold text-gray-600 mb-2">Nessun ordine</h3>
+                  <p class="text-gray-500 mb-6">Non hai ancora effettuato ordini</p>
+                  <button
+                    (click)="goToCheckout()"
+                    class="bg-[#a9876e] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#8b6f4f] transition"
+                  >
+                    Effettua il tuo primo ordine
+                  </button>
+                </div>
+              }
+
+              @if (!isLoadingOrders && orders.length > 0) {
+                <div class="space-y-4">
+                  @for (order of pagedOrders; track order.id) {
+                    <div class="border border-gray-200 rounded-xl p-5 bg-white hover:shadow-md transition">
+                      <div class="flex items-center justify-between mb-3">
+                        <div>
+                          <span class="text-xs text-gray-500 uppercase tracking-wide">Ordine effettuato il</span>
+                          <p class="font-semibold text-gray-800">{{ formatDate(order.orderDate) }}</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                          <span [ngClass]="getStatusBadgeClass(order.orderStatus)" class="px-3 py-1 rounded-full text-xs font-semibold">
+                            {{ order.orderStatus }}
+                          </span>
+                          <span class="text-lg font-bold text-[#a9876e]">{{ order.total | currency:'EUR':'symbol':'1.2-2' }}</span>
+                        </div>
+                      </div>
+
+                      <p class="text-sm text-gray-500 mb-3">Ordine <span class="font-semibold text-gray-700">#{{ order.id }}</span></p>
+
+                      @if (order.items.length > 0) {
+                        <div class="flex items-center gap-3 bg-[#f7f1eb] rounded-lg p-3 mb-4">
+                          @if (order.items[0].productImageUrl) {
+                            <img
+                              [src]="'https://localhost:5001' + order.items[0].productImageUrl"
+                              [alt]="order.items[0].productName"
+                              class="w-14 h-14 object-cover rounded-lg flex-shrink-0">
+                          } @else {
+                            <div class="w-14 h-14 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                              <mat-icon class="text-gray-400">image_not_supported</mat-icon>
+                            </div>
+                          }
+                          <div class="min-w-0">
+                            <p class="font-semibold text-gray-800 truncate">{{ order.items[0].productName }}</p>
+                            <p class="text-sm text-gray-500">Qtà: {{ order.items[0].quantity }} &bull; €{{ (order.items[0].unitPrice * order.items[0].quantity) | number:'1.2-2' }}</p>
+                          </div>
+                          @if (order.items.length > 1) {
+                            <span class="ml-auto text-xs text-gray-500 whitespace-nowrap flex-shrink-0">+ altri {{ order.items.length - 1 }}</span>
+                          }
+                        </div>
+                      }
+
+                      <div class="flex gap-2">
+                        <button
+                          (click)="viewOrderDetail(order.id)"
+                          class="flex-1 flex items-center justify-center gap-1 py-2 rounded-lg border-2 border-[#a9876e] text-[#a9876e] text-sm font-semibold hover:bg-[#a9876e] hover:text-white transition">
+                          <mat-icon class="text-[16px] leading-none">receipt_long</mat-icon>
+                          Visualizza dettagli ordine
+                        </button>
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                @if (ordersTotalPages > 1) {
+                  <div class="flex justify-center items-center gap-4 mt-8">
+                    <button
+                      (click)="ordersPrevPage()"
+                      [disabled]="!ordersHasPrev"
+                      class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-[#a9876e] text-[#a9876e] transition
+                             hover:bg-[#a9876e] hover:text-white
+                             disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#a9876e]">
+                      <mat-icon class="text-[20px] leading-none">chevron_left</mat-icon>
+                    </button>
+                    <span class="px-5 py-2 rounded-full bg-[#a9876e] text-white text-sm font-semibold shadow">
+                      {{ ordersPageIndex }} / {{ ordersTotalPages }}
+                    </span>
+                    <button
+                      (click)="ordersNextPage()"
+                      [disabled]="!ordersHasNext"
+                      class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-[#a9876e] text-[#a9876e] transition
+                             hover:bg-[#a9876e] hover:text-white
+                             disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#a9876e]">
+                      <mat-icon class="text-[20px] leading-none">chevron_right</mat-icon>
+                    </button>
+                  </div>
+                }
+              }
+            </div>
+          </mat-tab>
+
+          <mat-tab label="La Mia Wishlist">
+            <div class="p-8">
+              @if (wishlist().length === 0) {
+                <div class="text-center py-12">
+                  <mat-icon class="text-6xl text-gray-300 mb-4">favorite_border</mat-icon>
+                  <h3 class="text-xl font-semibold text-gray-600 mb-2">La tua wishlist è vuota</h3>
+                  <p class="text-gray-500 mb-6">Aggiungi i tuoi articoli preferiti cliccando sul cuore rosso</p>
+                </div>
+              }
+
+              @if (wishlist().length > 0) {
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  @for (item of pagedWishlistItems; track item.productId) {
+                    <div class="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition">
+                      <div class="relative overflow-hidden h-40 bg-gray-100">
+                        <img
+                          [src]="'https://localhost:5001' + (item.imageUrl || '/images/placeholder.png')"
+                          [alt]="item.name"
+                          class="w-full h-full object-cover hover:scale-110 transition duration-300"
+                        >
+                      </div>
+
+                      <div class="p-4">
+                        <h4 class="font-semibold text-gray-800 mb-2 line-clamp-2">{{ item.name }}</h4>
+                        <p class="text-lg font-bold text-[#a9876e] mb-4">€ {{ item.price | number:'1.2-2' }}</p>
+
+                        <div class="flex gap-2">
+                          <button
+                            (click)="addWishlistItemToCart(item)"
+                            class="flex-1 bg-[#a9876e] text-white py-2 rounded hover:bg-[#8b6f4f] transition font-semibold text-sm"
+                          >
+                            Al carrello
+                          </button>
+                          <button
+                            (click)="removeFromWishlist(item.productId)"
+                            class="px-3 py-2 border-2 border-red-500 text-red-500 rounded hover:bg-red-50 transition"
+                          >
+                            <mat-icon class="text-sm">delete</mat-icon>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                @if (wishlistTotalPages > 1) {
+                  <div class="flex justify-center items-center gap-4 mt-8">
+                    <button
+                      (click)="wishlistPrevPage()"
+                      [disabled]="!wishlistHasPrev"
+                      class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-[#a9876e] text-[#a9876e] transition
+                             hover:bg-[#a9876e] hover:text-white
+                             disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#a9876e]">
+                      <mat-icon class="text-[20px] leading-none">chevron_left</mat-icon>
+                    </button>
+                    <span class="px-5 py-2 rounded-full bg-[#a9876e] text-white text-sm font-semibold shadow">
+                      {{ wishlistPageIndex }} / {{ wishlistTotalPages }}
+                    </span>
+                    <button
+                      (click)="wishlistNextPage()"
+                      [disabled]="!wishlistHasNext"
+                      class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-[#a9876e] text-[#a9876e] transition
+                             hover:bg-[#a9876e] hover:text-white
+                             disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#a9876e]">
+                      <mat-icon class="text-[20px] leading-none">chevron_right</mat-icon>
+                    </button>
+                  </div>
+                }
+              }
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    }
+  </div>
+</div>
+
+@if (selectedOrder || isLoadingOrderDetail) {
+  <div class="fixed inset-0 z-50 bg-[#f7f1eb] overflow-y-auto">
+
+    <div class="bg-gradient-to-r from-[#a9876e] to-[#8b6f4f] text-white sticky top-0 z-10 shadow-md">
+      <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+        <button
+          (click)="closeOrderDetail()"
+          class="flex items-center gap-2 text-white hover:opacity-80 transition font-semibold">
+          <mat-icon>arrow_back</mat-icon>
+          I miei ordini
+        </button>
+        @if (selectedOrder) {
+          <div class="text-right">
+            <p class="text-xs opacity-80 uppercase tracking-wide">Ordine #{{ selectedOrder.id }}</p>
+            <p class="text-sm font-semibold">{{ formatDate(selectedOrder.orderDate) }}</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    @if (isLoadingOrderDetail) {
+      <div class="flex items-center justify-center min-h-[60vh]">
+        <div class="w-12 h-12 border-4 border-[#a9876e] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }
+
+    @if (selectedOrder && !isLoadingOrderDetail) {
+      <div class="max-w-4xl mx-auto px-6 py-8 space-y-6">
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-800">Dettagli ordine #{{ selectedOrder.id }}</h1>
+            <p class="text-gray-500 text-sm mt-1">Effettuato il {{ formatDate(selectedOrder.orderDate) }}</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <span [ngClass]="getStatusBadgeClass(selectedOrder.orderStatus)" class="px-4 py-1.5 rounded-full text-sm font-semibold">
+              {{ selectedOrder.orderStatus }}
+            </span>
+            <button
+              (click)="printInvoice(selectedOrder)"
+              class="flex items-center gap-1 px-4 py-2 rounded-lg border-2 border-[#a9876e] text-[#a9876e] text-sm font-semibold hover:bg-[#a9876e] hover:text-white transition">
+              <mat-icon class="text-[16px] leading-none">print</mat-icon>
+              Fattura / Ricevuta
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm p-6">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4">Articoli ordinati</h2>
+          <div class="space-y-3">
+            @for (item of selectedOrder.items; track item.productId) {
+              <div class="flex items-center gap-4 p-3 bg-[#f7f1eb] rounded-xl">
+                @if (item.productImageUrl) {
+                  <img
+                    [src]="'https://localhost:5001' + item.productImageUrl"
+                    [alt]="item.productName"
+                    class="w-16 h-16 object-cover rounded-xl flex-shrink-0">
+                } @else {
+                  <div class="w-16 h-16 bg-gray-200 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <mat-icon class="text-gray-400">image_not_supported</mat-icon>
+                  </div>
+                }
+                <div class="flex-1 min-w-0">
+                  <p class="font-semibold text-gray-800">{{ item.productName }}</p>
+                  <p class="text-sm text-gray-500">Qtà: {{ item.quantity }} &bull; €{{ item.unitPrice | number:'1.2-2' }} cad.</p>
+                </div>
+                <p class="font-bold text-gray-800 text-lg flex-shrink-0">€{{ (item.unitPrice * item.quantity) | number:'1.2-2' }}</p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <div class="bg-white rounded-2xl shadow-sm p-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Riepilogo costi</h2>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between text-gray-700">
+                <span>Subtotale</span>
+                <span>€{{ selectedOrder.subtotal | number:'1.2-2' }}</span>
+              </div>
+              <div class="flex justify-between text-gray-700">
+                <span>Spedizione ({{ selectedOrder.shippingMethod }})</span>
+                <span>€{{ selectedOrder.shippingCost | number:'1.2-2' }}</span>
+              </div>
+              @if (selectedOrder.taxAmount > 0) {
+                <div class="flex justify-between text-gray-700">
+                  <span>Tasse</span>
+                  <span>€{{ selectedOrder.taxAmount | number:'1.2-2' }}</span>
+                </div>
+              }
+              @if (selectedOrder.discount > 0) {
+                <div class="flex justify-between text-green-700">
+                  <span>Sconto{{ selectedOrder.couponCode ? ' (' + selectedOrder.couponCode + ')' : '' }}</span>
+                  <span>-€{{ selectedOrder.discount | number:'1.2-2' }}</span>
+                </div>
+              }
+              <hr class="border-[#e8d5c4] my-2">
+              <div class="flex justify-between font-bold text-xl text-[#a9876e]">
+                <span>Totale</span>
+                <span>€{{ selectedOrder.total | number:'1.2-2' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div class="bg-white rounded-2xl shadow-sm p-6">
+              <h2 class="text-base font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                <mat-icon class="text-[#a9876e] text-[18px]">local_shipping</mat-icon>
+                Spedizione
+              </h2>
+              <p class="text-gray-800 font-medium">{{ selectedOrder.shippingAddress }}</p>
+              <p class="text-gray-600 text-sm">{{ selectedOrder.shippingCity }}, {{ selectedOrder.shippingPostalCode }}</p>
+              <p class="text-gray-600 text-sm">{{ selectedOrder.shippingCountry }}</p>
+              <p class="text-gray-500 text-sm mt-1">Tel: {{ selectedOrder.phoneNumber }}</p>
+              <p class="text-gray-400 text-xs mt-2">Consegna stimata: {{ selectedOrder.estimatedDeliveryDays }} giorni lavorativi</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm p-6">
+              <h2 class="text-base font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                <mat-icon class="text-[#a9876e] text-[18px]">credit_card</mat-icon>
+                Pagamento
+              </h2>
+              @if (selectedOrder.paymentMethod) {
+                <p class="text-gray-600 text-sm mt-1">{{ selectedOrder.paymentMethod }}</p>
+              }
+              @if (selectedOrder.paymentDate) {
+                <p class="text-gray-500 text-sm mt-1">{{ formatDate(selectedOrder.paymentDate) }}</p>
+              }
+            </div>
+          </div>
+        </div>
+
+        @if (selectedOrder.notes) {
+          <div class="bg-yellow-50 border border-yellow-200 rounded-2xl p-5">
+            <h2 class="text-base font-semibold text-yellow-800 mb-1 flex items-center gap-2">
+              <mat-icon class="text-[18px]">sticky_note_2</mat-icon>
+              Note
+            </h2>
+            <p class="text-yellow-700 text-sm">{{ selectedOrder.notes }}</p>
+          </div>
+        }
+
+        <div class="pb-8">
+          <button
+            (click)="closeOrderDetail()"
+            class="flex items-center gap-2 text-[#a9876e] font-semibold hover:opacity-80 transition">
+            <mat-icon>arrow_back</mat-icon>
+            Torna ai miei ordini
+          </button>
+        </div>
+
+      </div>
+    }
+  </div>
+}

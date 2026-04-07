@@ -1,0 +1,96 @@
+<div class="min-h-screen bg-gradient-to-b from-[#f7f1eb] to-white">
+
+  <!-- Hero -->
+  <div class="bg-gradient-to-r from-[#a9876e] to-[#8b6f4f] text-white py-20 px-4 text-center">
+    <div class="max-w-3xl mx-auto">
+      <mat-icon class="text-[56px] mb-4 text-[#f7f1eb]">assignment_return</mat-icon>
+      <h1 class="text-5xl md:text-6xl font-bold mb-4">Resi e Cambi</h1>
+      <p class="text-xl text-[#f7f1eb]">La tua soddisfazione è la nostra priorità. Ecco come gestiamo resi e cambi.</p>
+    </div>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-4 py-16 space-y-10">
+
+    <!-- Politica resi -->
+    <section class="bg-white rounded-2xl shadow-sm border border-[#e8dfd5] p-8">
+      <h2 class="text-2xl font-semibold text-[#a9876e] mb-6 flex items-center gap-2">
+        <mat-icon>policy</mat-icon> Politica resi
+      </h2>
+      <div class="space-y-4 text-gray-600 leading-relaxed">
+        <p>Accettiamo resi entro <strong class="text-gray-800">14 giorni</strong> dalla data di ricezione dell'ordine, a condizione che i prodotti siano:</p>
+        <ul class="list-none space-y-2 pl-2">
+          <li class="flex items-start gap-2"><mat-icon class="text-green-600 text-[18px] mt-0.5">check_circle</mat-icon><span>Integri, non aperti e non utilizzati</span></li>
+          <li class="flex items-start gap-2"><mat-icon class="text-green-600 text-[18px] mt-0.5">check_circle</mat-icon><span>Nella confezione originale con tutti gli imballaggi</span></li>
+          <li class="flex items-start gap-2"><mat-icon class="text-green-600 text-[18px] mt-0.5">check_circle</mat-icon><span>Accompagnati dalla prova d'acquisto</span></li>
+        </ul>
+        <div class="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl flex gap-3">
+          <mat-icon class="text-amber-600 shrink-0">info</mat-icon>
+          <p class="text-sm text-amber-800">Per motivi igienici non accettiamo resi su prodotti già aperti o parzialmente utilizzati, salvo difetti di produzione.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Come fare un reso -->
+    <section class="bg-white rounded-2xl shadow-sm border border-[#e8dfd5] p-8">
+      <h2 class="text-2xl font-semibold text-[#a9876e] mb-6 flex items-center gap-2">
+        <mat-icon>redo</mat-icon> Come effettuare un reso
+      </h2>
+      <div class="space-y-5">
+        <div class="flex gap-4">
+          <div class="w-8 h-8 rounded-full bg-[#a9876e] text-white flex items-center justify-center font-bold shrink-0">1</div>
+          <div>
+            <p class="font-semibold text-gray-800">Contattaci entro 14 giorni</p>
+            <p class="text-sm text-gray-500 mt-1">Scrivi a <strong>resi&#64;lucina.com</strong> o usa il modulo nella pagina <a [routerLink]="['/contact-us']" class="text-[#a9876e] underline">Contatti</a> indicando numero ordine e motivo del reso.</p>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="w-8 h-8 rounded-full bg-[#a9876e] text-white flex items-center justify-center font-bold shrink-0">2</div>
+          <div>
+            <p class="font-semibold text-gray-800">Ricevi le istruzioni di spedizione</p>
+            <p class="text-sm text-gray-500 mt-1">Ti invieremo un'email con l'indirizzo di restituzione e le istruzioni per imballare correttamente i prodotti.</p>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="w-8 h-8 rounded-full bg-[#a9876e] text-white flex items-center justify-center font-bold shrink-0">3</div>
+          <div>
+            <p class="font-semibold text-gray-800">Spedisci il pacco</p>
+            <p class="text-sm text-gray-500 mt-1">Le spese di restituzione sono a carico del cliente, salvo nel caso di prodotti difettosi o errori da parte nostra.</p>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="w-8 h-8 rounded-full bg-[#a9876e] text-white flex items-center justify-center font-bold shrink-0">4</div>
+          <div>
+            <p class="font-semibold text-gray-800">Rimborso entro 5 giorni lavorativi</p>
+            <p class="text-sm text-gray-500 mt-1">Una volta ricevuto e verificato il prodotto, elaboreremo il rimborso sul metodo di pagamento originale.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cambi -->
+    <section class="bg-white rounded-2xl shadow-sm border border-[#e8dfd5] p-8">
+      <h2 class="text-2xl font-semibold text-[#a9876e] mb-4 flex items-center gap-2">
+        <mat-icon>swap_horiz</mat-icon> Cambi
+      </h2>
+      <p class="text-gray-600">Se desideri cambiare un prodotto con un altro, ti consigliamo di effettuare un reso e un nuovo ordine separato. Questo garantisce i tempi più rapidi per ricevere il prodotto desiderato.</p>
+    </section>
+
+    <!-- Prodotti difettosi -->
+    <section class="bg-white rounded-2xl shadow-sm border border-[#e8dfd5] p-8">
+      <h2 class="text-2xl font-semibold text-[#a9876e] mb-4 flex items-center gap-2">
+        <mat-icon>report_problem</mat-icon> Prodotti difettosi o errati
+      </h2>
+      <p class="text-gray-600">Se hai ricevuto un prodotto difettoso o diverso da quello ordinato, contattaci entro <strong class="text-gray-800">48 ore</strong> dalla ricezione allegando una foto. Provvederemo alla sostituzione o al rimborso completo, incluse le spese di spedizione.</p>
+    </section>
+
+    <!-- CTA -->
+    <div class="text-center pt-4">
+      <p class="text-gray-500 mb-4">Hai bisogno di assistenza?</p>
+      <a [routerLink]="['/contact-us']"
+         class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#a9876e] text-white font-semibold hover:bg-[#8b6f4f] transition-colors">
+        <mat-icon>mail</mat-icon> Contattaci
+      </a>
+    </div>
+
+  </div>
+</div>

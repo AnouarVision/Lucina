@@ -1,0 +1,46 @@
+.checkout-page {
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+@keyframes slideInForm {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+form > div > div {
+  animation: slideInForm 0.3s ease-in-out;
+}
+
+input:focus,
+select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .checkout-page {
+    padding: 0;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  input,
+  select {
+    font-size: 16px; // Evita zoom su mobile
+  }
+}
