@@ -1,54 +1,103 @@
-<div class="max-w-4xl mx-auto p-12">
-  <h1 class="text-3xl font-bold text-center text-[#a9876e] mb-8">FAQ - Domande Frequenti</h1>
+<!-- Hero Section -->
+<div class="bg-gradient-to-r from-[#a9876e] to-[#8b6f4f] text-white py-16 px-4 fadeIn">
+  <div class="max-w-4xl mx-auto text-center">
+    <h1 class="text-4xl font-bold mb-4">Domande Frequenti</h1>
+    <p class="text-lg opacity-90">Trova risposte a tutte le tue domande su account, pagamenti, ordini e resi</p>
+  </div>
+</div>
 
-  <mat-accordion class="space-y-4">
-    <!-- Domanda 1 -->
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Come posso creare un account?
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <p>
-        Puoi creare un account cliccando sull'icona del profilo in alto a destra e selezionando "Registrati".
-        Compila il modulo con le informazioni richieste e conferma l’email.
-      </p>
-    </mat-expansion-panel>
+<!-- Main Content -->
+<div class="min-h-screen bg-[#f7f1eb] py-12 px-4">
+  <div class="max-w-4xl mx-auto">
+    <!-- Search Bar -->
+    <div class="mb-8 fadeInUp" [style.animation-delay]="'100ms'">
+      <div class="relative">
+        <mat-icon class="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#a9876e]">search</mat-icon>
+        <input
+          type="text"
+          placeholder="Cerca una domanda..."
+          [(ngModel)]="searchQuery"
+          class="w-full pl-12 pr-4 py-3 border-2 border-[#e8dfd5] rounded-lg focus:outline-none focus:border-[#a9876e] transition-colors"
+        />
+        <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-sm text-gray-500">
+          {{ filteredFaqs().length }} risultati
+        </span>
+      </div>
+    </div>
 
-    <!-- Domanda 2 -->
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Quali metodi di pagamento sono accettati?
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <p>
-        Accettiamo pagamenti tramite carta di credito, PayPal e bonifico bancario. Tutti i pagamenti sono sicuri e crittografati.
-      </p>
-    </mat-expansion-panel>
+    <!-- Category Filter Buttons -->
+    <div class="mb-12 fadeInUp" [style.animation-delay]="'150ms'">
+      <div class="flex flex-wrap gap-3">
+        <button
+          (click)="selectCategory(null)"
+          [ngClass]="{
+            'bg-[#a9876e] text-white': !selectedCategory(),
+            'bg-[#e8dfd5] text-[#8b6f4f]': selectedCategory()
+          }"
+          class="px-6 py-2 rounded-full font-medium transition-all hover:shadow-md"
+        >
+          Tutte le domande
+        </button>
+        <button
+          *ngFor="let category of categories"
+          (click)="selectCategory(category.id)"
+          [ngClass]="{
+            'bg-[#a9876e] text-white': selectedCategory() === category.id,
+            'bg-[#e8dfd5] text-[#8b6f4f]': selectedCategory() !== category.id
+          }"
+          class="px-6 py-2 rounded-full font-medium transition-all hover:shadow-md flex items-center gap-2"
+        >
+          <mat-icon class="text-sm">{{ category.icon }}</mat-icon>
+          {{ category.name }}
+        </button>
+      </div>
+    </div>
 
-    <!-- Domanda 3 -->
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Come posso tracciare il mio ordine?
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <p>
-        Dopo aver completato l’ordine, riceverai una email con il numero di tracking. Puoi anche accedere alla sezione "I miei ordini" nel tuo account.
-      </p>
-    </mat-expansion-panel>
+    <!-- FAQ Accordion -->
+    <div class="fadeInUp" [style.animation-delay]="'200ms'">
+      <mat-accordion class="space-y-3" multi>
+        <div
+          *ngFor="let faq of filteredFaqs(); let i = index"
+          class="faq-item fadeInUp"
+          [style.animation-delay]="(i * 50) + 'ms'"
+        >
+          <mat-expansion-panel class="shadow-md hover:shadow-lg transition-shadow">
+            <mat-expansion-panel-header class="bg-white border-l-4 border-[#a9876e]">
+              <mat-panel-title class="flex items-center gap-3 w-full">
+                <mat-icon class="text-[#a9876e]">{{ faq.icon }}</mat-icon>
+                <span class="font-semibold text-gray-800">{{ faq.question }}</span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="text-gray-700 leading-relaxed">
+              {{ faq.answer }}
+            </div>
+          </mat-expansion-panel>
+        </div>
+      </mat-accordion>
 
-    <!-- Domanda 4 -->
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Posso restituire un prodotto?
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <p>
-        Sì, puoi restituire un prodotto entro 14 giorni dalla consegna. I prodotti devono essere integri e nella confezione originale. Contatta il servizio clienti per avviare la procedura.
-      </p>
-    </mat-expansion-panel>
-  </mat-accordion>
+      <!-- No Results Message -->
+      <div
+        *ngIf="filteredFaqs().length === 0"
+        class="text-center py-12 fadeIn"
+      >
+        <mat-icon class="text-6xl text-[#e8dfd5] mb-4">help_outline</mat-icon>
+        <p class="text-xl text-gray-600 mb-2">Nessuna domanda trovata</p>
+        <p class="text-gray-500">Prova a modificare i tuoi criteri di ricerca o contattaci direttamente</p>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="mt-16 fadeInUp" [style.animation-delay]="'250ms'">
+      <div class="bg-gradient-to-r from-[#a9876e] to-[#8b6f4f] rounded-lg p-12 text-white text-center">
+        <h2 class="text-2xl font-bold mb-4">Non hai trovato quello che cercavi?</h2>
+        <p class="text-lg opacity-90 mb-6">Il nostro team di assistenza è sempre disponibile per aiutarti</p>
+        <button
+          (click)="router.navigate(['/contact'])"
+          class="bg-white text-[#a9876e] px-8 py-3 rounded-lg font-semibold hover:bg-[#f7f1eb] transition-colors"
+        >
+          Contattaci
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

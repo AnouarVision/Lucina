@@ -1,40 +1,103 @@
-<div class="max-w-5xl mx-auto p-8">
-  <h1 class="text-4xl font-bold text-center text-[#a9876e] mb-8">Chi Siamo</h1>
-
-  <!-- Sezione mission -->
-  <section class="mb-12">
-    <h2 class="text-2xl font-semibold mb-4">La nostra missione</h2>
-    <p class="text-gray-700 leading-relaxed">
-      Siamo appassionati di skincare e bellezza. La nostra missione è aiutarti a scoprire prodotti
-      di alta qualità e routine personalizzate per ogni tipo di pelle, rendendo la cura di sé un
-      momento piacevole e consapevole.
-    </p>
-  </section>
-
-  <!-- Sezione valori -->
-  <section class="mb-12 grid md:grid-cols-3 gap-6">
-    <mat-card class="p-6 text-center shadow-md hover:shadow-lg transition-shadow">
-      <mat-icon class="text-5xl text-[#a9876e] mb-4">eco</mat-icon>
-      <h3 class="text-xl font-semibold mb-2">Sostenibilità</h3>
-      <p class="text-gray-600">
-        Ci impegniamo a selezionare prodotti eco-friendly e packaging responsabile.
+<div class="min-h-screen bg-gradient-to-b from-[#f7f1eb] to-white">
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-r from-[#a9876e] to-[#8b6f4f] text-white py-20 px-4 animate-fade-in">
+    <div class="max-w-6xl mx-auto text-center">
+      <h1 class="text-6xl md:text-7xl font-bold mb-4">Chi Siamo</h1>
+      <p class="text-xl md:text-2xl text-[#f7f1eb] max-w-2xl mx-auto leading-relaxed">
+        La tua missione di bellezza, il nostro impegno per l'eccellenza
       </p>
-    </mat-card>
+    </div>
+  </div>
 
-    <mat-card class="p-6 text-center shadow-md hover:shadow-lg transition-shadow">
-      <mat-icon class="text-5xl text-[#a9876e] mb-4">support_agent</mat-icon>
-      <h3 class="text-xl font-semibold mb-2">Assistenza</h3>
-      <p class="text-gray-600">
-        Siamo sempre disponibili per rispondere alle tue domande e guidarti nella scelta dei prodotti.
-      </p>
-    </mat-card>
+  <div class="max-w-6xl mx-auto px-4 py-20">
+    <!-- Missione Section -->
+    <section class="mb-24 animate-fade-in-up">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+          <h2 class="text-4xl font-bold text-[#a9876e] mb-6">La nostra missione</h2>
+          <p class="text-lg text-gray-700 leading-relaxed mb-4">
+            Siamo appassionati di skincare e bellezza. La nostra missione è aiutarti a scoprire prodotti di alta qualità e routine personalizzate per ogni tipo di pelle.
+          </p>
+          <p class="text-lg text-gray-700 leading-relaxed">
+            Renderemo la cura di sé un momento piacevole e consapevole, perché crediamo che la bellezza vera parte dall'interno, dalla consapevolezza di prendersi cura di se stessi.
+          </p>
+        </div>
+        <div class="relative h-96 rounded-2xl overflow-hidden shadow-lg">
+          <img src="assets/images/about_us.png" alt="La nostra missione" class="w-full h-full object-cover">
+        </div>
+      </div>
+    </section>
 
-    <mat-card class="p-6 text-center shadow-md hover:shadow-lg transition-shadow">
-      <mat-icon class="text-5xl text-[#a9876e] mb-4">star</mat-icon>
-      <h3 class="text-xl font-semibold mb-2">Qualità</h3>
-      <p class="text-gray-600">
-        Collaboriamo solo con brand certificati e di fiducia per garantirti prodotti efficaci e sicuri.
+    <!-- Valori Section -->
+    <section class="mb-24">
+      <h2 class="text-4xl font-bold text-center text-[#a9876e] mb-16">I nostri valori</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div *ngFor="let value of values; let i = index"
+             class="value-card animate-slide-up"
+             [style.animation-delay]="(i * 100) + 'ms'">
+          <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 border border-[#a9876e]/10 h-full flex flex-col">
+            <div class="bg-gradient-to-br from-[#f7f1eb] to-[#e8dfd5] rounded-full w-20 h-20 flex items-center justify-center mb-6">
+              <mat-icon class="text-4xl text-[#a9876e]" [attr.aria-label]="value.title">{{ value.icon }}</mat-icon>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-3">{{ value.title }}</h3>
+            <p class="text-gray-600 leading-relaxed flex-grow">{{ value.description }}</p>
+            <div class="mt-6 h-1 bg-gradient-to-r from-[#a9876e] to-transparent rounded-full"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="mb-24 animate-fade-in-up">
+      <h2 class="text-4xl font-bold text-center text-[#a9876e] mb-16">La nostra storia</h2>
+      <div class="max-w-2xl mx-auto relative">
+        <!-- Timeline vertical line -->
+        <div class="hidden sm:block absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-[#a9876e] to-[#e8dfd5]"></div>
+
+        <!-- Timeline items -->
+        <div class="space-y-12 relative pt-8">
+          <div *ngFor="let item of timeline; let i = index"
+               class="timeline-item animate-slide-up relative mb-8"
+               [style.animation-delay]="(i * 150) + 'ms'">
+
+            <!-- Timeline dot -->
+            <div class="hidden sm:flex absolute left-1/2 transform -translate-x-1/2 -top-8">
+              <div class="w-6 h-6 bg-[#a9876e] rounded-full border-4 border-white shadow-lg"></div>
+            </div>
+
+            <!-- Card content -->
+            <div [ngClass]="i % 2 === 0 ? 'sm:mr-1/2 sm:pr-12 sm:text-right' : 'sm:ml-1/2 sm:pl-12'">
+              <div class="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow border-l-4 border-[#a9876e]">
+                <span class="text-sm font-bold text-[#a9876e] uppercase tracking-wider">{{ item.year }}</span>
+                <h3 class="text-2xl font-bold text-gray-900 mt-2 mb-2">{{ item.title }}</h3>
+                <p class="text-gray-600">{{ item.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 px-8 bg-gradient-to-r from-[#f7f1eb] via-white to-[#f7f1eb] rounded-2xl border-2 border-[#a9876e]/20 text-center animate-fade-in-up">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Pronto a unirti alla comunità?</h2>
+      <p class="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
+        Scopri i nostri prodotti premium e inizia il tuo percorso verso una bellezza consapevole.
       </p>
-    </mat-card>
-  </section>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button
+          (click)="goToShop()"
+          class="inline-flex items-center gap-2 px-8 py-4 bg-[#a9876e] text-white font-bold text-lg rounded-lg hover:bg-[#8b6f4f] transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95">
+          <mat-icon>shopping_bag</mat-icon>
+          <span>Scopri i prodotti</span>
+        </button>
+        <button
+          (click)="goToContact()"
+          class="inline-flex items-center gap-2 px-8 py-4 border-2 border-[#a9876e] text-[#a9876e] font-bold text-lg rounded-lg hover:bg-[#f7f1eb] transition-all duration-300 hover:scale-105 active:scale-95">
+          <mat-icon>mail</mat-icon>
+          <span>Contattaci</span>
+        </button>
+      </div>
+    </section>
+  </div>
 </div>

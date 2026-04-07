@@ -1,19 +1,62 @@
-@if(product){
-  <mat-card appearance="raised" class="overflow-hidden rounded-lg shadow-md">
-    <img [src]="'https://localhost:5001' + product.pictureUrl" alt="image of {{product.name}}" class="w-full h-60 object-cover">
+@if (product) {
+  <div class="group bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden flex flex-col">
 
-    <!-- Titolo e prezzo con padding -->
-    <mat-card-title class="px-4 pt-4 text-lg font-semibold">{{product.name}}</mat-card-title>
-    <mat-card-subtitle class="px-4 pb-4 text-gray-700">{{product.price | currency:'EUR'}}</mat-card-subtitle>
+    <!-- Image -->
+    <div class="relative overflow-hidden h-56 bg-[#f7f1eb] cursor-pointer" (click)="viewDetails()">
+      <img
+        [src]="'https://localhost:5001' + product.pictureUrl"
+        [alt]="product.name"
+        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
 
-    <!-- Azioni -->
-    <mat-card-actions class="px-4 pb-4 flex flex-col gap-2">
-      <button mat-stroked-button class="w-full px-4 py-2 text-[#a9876e] border-[#a9876e] hover:bg-[#f7f1eb]">
-        <mat-icon>search</mat-icon> Scopri
-      </button>
-      <button mat-stroked-button class="w-full px-4 py-2 text-[#a9876e] border-[#a9876e] hover:bg-[#f7f1eb]">
-        <mat-icon>add_shopping_cart</mat-icon> Al carrello
-      </button>
-    </mat-card-actions>
-  </mat-card>
+      <!-- Low stock badge -->
+      @if (product.quantityInStock > 0 && product.quantityInStock <= 5) {
+        <span class="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-[10px] font-semibold uppercase tracking-wide shadow-sm">
+          Ultimi {{ product.quantityInStock }}
+        </span>
+      }
+      @if (product.quantityInStock === 0) {
+        <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+          <span class="px-3 py-1 rounded-full bg-white/90 text-gray-700 text-xs font-semibold">Esaurito</span>
+        </div>
+      }
+
+      <!-- Wishlist button -->
+      <app-favorite-button
+        [product]="{ id: product.id, name: product.name, price: product.price, imageUrl: product.pictureUrl }">
+      </app-favorite-button>
+    </div>
+
+    <!-- Content -->
+    <div class="flex flex-col flex-1 p-4 gap-2">
+
+      <!-- Brand chip -->
+      <span class="self-start text-[10px] font-semibold uppercase tracking-widest text-[#a9876e] bg-[#f7f1eb] px-2 py-0.5 rounded-full">
+        {{ product.brand }}
+      </span>
+
+      <!-- Name -->
+      <h3
+        class="text-sm font-semibold text-gray-800 leading-snug line-clamp-2 cursor-pointer hover:text-[#a9876e] transition-colors"
+        (click)="viewDetails()">
+        {{ product.name }}
+      </h3>
+
+      <!-- Type -->
+      <p class="text-xs text-gray-400">{{ product.type }}</p>
+
+      <!-- Price + CTA -->
+      <div class="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
+        <span class="text-base font-bold text-gray-800">{{ product.price | currency:'EUR' }}</span>
+        <button
+          (click)="addToCart()"
+          [disabled]="product.quantityInStock === 0"
+          class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#a9876e] text-white text-xs font-semibold
+                 hover:bg-[#8b6f4f] transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+          <mat-icon class="text-[15px] leading-none">add_shopping_cart</mat-icon>
+          Aggiungi
+        </button>
+      </div>
+
+    </div>
+  </div>
 }

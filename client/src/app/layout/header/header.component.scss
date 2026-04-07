@@ -2,11 +2,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;       /* stessa larghezza per tutte */
-  height: 40px;      /* stessa altezza per tutte */
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: color 300ms ease;
+
+  &:hover {
+    color: #a9876e;
+  }
 }
 
 .icon-wrapper mat-icon {
-  font-size: 26px;   /* dimensione uniforme icona */
+  font-size: 26px;
   line-height: 1;
 }

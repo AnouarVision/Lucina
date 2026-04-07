@@ -1,13 +1,11 @@
-<header class="shadow-md p-4 pl-9 pr-9 pw-full bg-[#fff7ed]">
-  <div class="flex items-center justify-between max-w-screen-2xl mx-auto">
+<header class="shadow-md bg-[#fff7ed] border-t border-[#e8dfd5]">
+  <div class="px-4 md:px-9 py-3 flex items-center justify-between max-w-screen-2xl mx-auto">
 
-    <!-- Logo -->
-    <a [routerLink]="['/']">
+    <a [routerLink]="['/']" (click)="closeMobileMenu()">
       <img src="/assets/images/logobg.png" alt="app logo" class="max-h-11 cursor-pointer">
     </a>
 
-    <!-- Menu Desktop -->
-    <nav class="hidden md:flex gap-5 uppercase text-lg">
+    <nav class="hidden md:flex gap-5 uppercase text-base font-medium">
       <a [routerLink]="'/'" class="hover:text-[#a9876e] transition-colors">Home</a>
       <a [routerLink]="'shop'" class="hover:text-[#a9876e] transition-colors">Shop</a>
       <a [routerLink]="'/skincare-routine'" class="hover:text-[#a9876e] transition-colors">Skincare Routine</a>
@@ -16,40 +14,70 @@
       <a [routerLink]="'/faq'" class="hover:text-[#a9876e] transition-colors">FAQ</a>
     </nav>
 
-    <!-- Icone -->
-    <div class="flex items-center gap-4">
-      <div class="relative">
+    <div class="flex items-center gap-3">
+
+      <div class="relative hidden md:block">
         <input
           [(ngModel)]="searchTerm"
           (keyup.enter)="onSearch()"
           placeholder="Cerca prodotti..."
-          class="border px-3 py-1 rounded-md w-64 focus:outline-none focus:ring-2 focus:ring-[#a9876e]"
+          class="border border-[#dcc6af] px-3 py-1.5 rounded-full w-52 text-sm focus:outline-none focus:ring-2 focus:ring-[#a9876e]"
         >
         <button
           (click)="onSearch()"
-          class="absolute right-1 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-[#a9876e]"
+          class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#a9876e]"
         >
-          <mat-icon>search</mat-icon>
+          <mat-icon class="text-[18px]">search</mat-icon>
         </button>
       </div>
 
-      <span matBadge="0" matBadgeSize="medium" class="icon-wrapper">
+      <a [routerLink]="[getProfileRoute()]" class="icon-wrapper">
         <mat-icon fontIcon="person_outline"></mat-icon>
-      </span>
+      </a>
 
-      <span matBadge="0" matBadgeSize="medium" class="icon-wrapper">
+      <a [routerLink]="['/cart']" class="icon-wrapper relative">
         <mat-icon>shopping_cart</mat-icon>
-      </span>
+        @if (itemCount > 0) {
+          <span class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#a9876e] text-white text-[10px] flex items-center justify-center font-bold">{{ itemCount }}</span>
+        }
+      </a>
 
-      <span class="icon-wrapper">
+      <a [routerLink]="['/wishlist']" class="icon-wrapper relative">
         <mat-icon fontIcon="favorite_border"></mat-icon>
-      </span>
-    </div>
+        @if (wishlistCount > 0) {
+          <span class="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#a9876e] text-white text-[10px] flex items-center justify-center font-bold">{{ wishlistCount }}</span>
+        }
+      </a>
 
-
-    <!-- Hamburger Menu per mobile -->
-      <button class="md:hidden">
-        <mat-icon fontIcon="menu"></mat-icon>
+      <button class="md:hidden p-1 rounded-lg hover:bg-[#f0e6db] transition-colors" (click)="toggleMobileMenu()">
+        <mat-icon>{{ mobileMenuOpen() ? 'close' : 'menu' }}</mat-icon>
       </button>
     </div>
+  </div>
+
+  @if (mobileMenuOpen()) {
+    <div class="md:hidden bg-[#fff7ed] border-t border-[#e8dfd5] px-6 py-4 flex flex-col gap-4">
+
+      <div class="relative">
+        <input
+          [(ngModel)]="searchTerm"
+          (keyup.enter)="onSearch(); closeMobileMenu()"
+          placeholder="Cerca prodotti..."
+          class="w-full border border-[#dcc6af] px-4 py-2 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#a9876e]"
+        >
+        <button (click)="onSearch(); closeMobileMenu()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+          <mat-icon class="text-[18px]">search</mat-icon>
+        </button>
+      </div>
+
+      <nav class="flex flex-col gap-3 uppercase text-base font-medium">
+        <a [routerLink]="'/'" (click)="closeMobileMenu()" class="py-1 hover:text-[#a9876e] transition-colors">Home</a>
+        <a [routerLink]="'shop'" (click)="closeMobileMenu()" class="py-1 hover:text-[#a9876e] transition-colors">Shop</a>
+        <a [routerLink]="'/skincare-routine'" (click)="closeMobileMenu()" class="py-1 hover:text-[#a9876e] transition-colors">Skincare Routine</a>
+        <a [routerLink]="'/about-us'" (click)="closeMobileMenu()" class="py-1 hover:text-[#a9876e] transition-colors">About us</a>
+        <a [routerLink]="'/contact-us'" (click)="closeMobileMenu()" class="py-1 hover:text-[#a9876e] transition-colors">Contact us</a>
+        <a [routerLink]="'/faq'" (click)="closeMobileMenu()" class="py-1 hover:text-[#a9876e] transition-colors">FAQ</a>
+      </nav>
+    </div>
+  }
 </header>

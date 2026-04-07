@@ -9,7 +9,7 @@ export class AnnouncementComponent implements AfterViewInit, OnDestroy {
   messages = [
     'ISCRIVITI ALLA NEWSLETTER PER RICEVERE UN <strong>10% DI SCONTO</strong> SUL PRIMO ORDINE!',
     'SPEDIZIONE GRATUITA A PARTIRE DA €65!',
-    'VUOI DIVENTARE RIVENDITORE LUCINA? <a href="/pages/vendita-b2b" class="underline">CLICCA QUI</a>'
+    'NUOVI PRODOTTI K-BEAUTY OGNI SETTIMANA &mdash; SCOPRI LE ULTIME NOVITÀ!'
   ];
 
   @ViewChild('viewport', { static: true }) viewport!: ElementRef<HTMLElement>;

@@ -1,0 +1,71 @@
+:host {
+  display: block;
+}
+
+// Animazioni
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseIcon {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 600ms ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 600ms ease-out 300ms both;
+}
+
+.value-card,
+.timeline-item {
+  animation: slideUp 600ms ease-out forwards;
+}
+
+.animate-pulse-icon {
+  animation: pulseIcon 3s ease-in-out infinite;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .value-card,
+  .timeline-item {
+    animation-delay: 0ms !important;
+  }
+}

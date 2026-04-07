@@ -1,0 +1,79 @@
+<div class="wishlist-page min-h-screen bg-gray-50">
+  <div class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <h1 class="text-3xl font-bold text-gray-800">La Mia Wishlist</h1>
+      <button
+        (click)="goToShop()"
+        class="text-[#a9876e] hover:text-[#8b6f4f] font-semibold">
+        ← Continua lo shopping
+      </button>
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div *ngIf="wishlist().length === 0" class="bg-white rounded-lg shadow-sm p-12 text-center">
+      <mat-icon class="text-6xl text-gray-300 mx-auto mb-4">favorite_border</mat-icon>
+      <h2 class="text-2xl font-semibold text-gray-600 mb-4">La tua wishlist è vuota</h2>
+      <p class="text-gray-500 mb-6">Aggiungi i tuoi articoli preferiti cliccando sul cuore rosso</p>
+      <button
+        (click)="goToShop()"
+        class="bg-[#a9876e] text-white px-6 py-2 rounded-lg hover:bg-[#8b6f4f] transition">
+        Scopri i nostri prodotti
+      </button>
+    </div>
+
+    <div *ngIf="wishlist().length > 0">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div
+          *ngFor="let item of pagedItems"
+          class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden group">
+          <div class="relative overflow-hidden h-64 bg-gray-100">
+            <img
+              [src]="'https://localhost:5001' + (item.imageUrl || '/images/placeholder.png')"
+              [alt]="item.name"
+              class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
+            <button
+              (click)="removeFromWishlist(item.productId)"
+              class="absolute top-2 right-2 bg-white rounded-full p-2 hover:bg-red-50 transition z-10">
+              <mat-icon class="text-red-500">close</mat-icon>
+            </button>
+          </div>
+
+          <div class="p-4">
+            <h3 class="font-semibold text-gray-800 mb-2 line-clamp-2">{{ item.name }}</h3>
+            <p class="text-lg font-bold text-[#a9876e] mb-4">€ {{ item.price | number: '1.2-2' }}</p>
+            <button
+              (click)="addToCart(item)"
+              class="w-full bg-[#a9876e] text-white py-2 rounded hover:bg-[#8b6f4f] transition font-semibold">
+              Aggiungi al carrello
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="totalPages > 1" class="flex justify-center items-center gap-4 mt-8">
+        <button
+          (click)="prevPage()"
+          [disabled]="!hasPrevPage"
+          class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-[#a9876e] text-[#a9876e] transition
+                 hover:bg-[#a9876e] hover:text-white
+                 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#a9876e]">
+          <mat-icon class="text-[20px] leading-none">chevron_left</mat-icon>
+        </button>
+
+        <span class="px-5 py-2 rounded-full bg-[#a9876e] text-white text-sm font-semibold shadow">
+          {{ pageIndex }} / {{ totalPages }}
+        </span>
+
+        <button
+          (click)="nextPage()"
+          [disabled]="!hasNextPage"
+          class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-[#a9876e] text-[#a9876e] transition
+                 hover:bg-[#a9876e] hover:text-white
+                 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-[#a9876e]">
+          <mat-icon class="text-[20px] leading-none">chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

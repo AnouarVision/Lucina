@@ -1,41 +1,184 @@
-<div class="max-w-2xl mx-auto p-8 bg-white shadow-lg rounded-lg mt-8 mb-12">
-  <h1 class="text-3xl font-bold text-center text-[#a9876e] mb-6">Contattaci</h1>
-  <p class="text-center mb-6 text-gray-700">
-    Compila il modulo sottostante e ti risponderemo al più presto.
-  </p>
+<div class="min-h-screen bg-gradient-to-b from-[#f7f1eb] to-white">
+  <!-- Hero Section -->
+  <div class="bg-gradient-to-r from-[#a9876e] to-[#8b6f4f] text-white py-20 px-4 animate-fade-in">
+    <div class="max-w-6xl mx-auto text-center">
+      <h1 class="text-6xl md:text-7xl font-bold mb-4">Contattaci</h1>
+      <p class="text-xl md:text-2xl text-[#f7f1eb] max-w-2xl mx-auto">
+        Avete domande? Scrivici! Siamo qui per aiutarti nella tua routine di bellezza.
+      </p>
+    </div>
+  </div>
 
-  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
-    <!-- Nome -->
-    <mat-form-field appearance="fill">
-      <mat-label>Nome</mat-label>
-      <input matInput placeholder="Il tuo nome" formControlName="name">
-      <mat-error *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched">
-        Il nome è obbligatorio
-      </mat-error>
-    </mat-form-field>
+  <div class="max-w-6xl mx-auto px-4 py-20">
+    <!-- Info Cards Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+      <div *ngFor="let info of infos; let i = index"
+           class="info-card animate-slide-up"
+           [style.animation-delay]="(i * 100) + 'ms'">
+        <div class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 text-center border-t-4 border-[#a9876e] h-full">
+          <div class="bg-gradient-to-br from-[#f7f1eb] to-[#e8dfd5] rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <mat-icon class="text-3xl text-[#a9876e]" [attr.aria-label]="info.title">{{ info.icon }}</mat-icon>
+          </div>
+          <h3 class="font-bold text-gray-900 mb-2 text-lg">{{ info.title }}</h3>
+          <p class="text-gray-600 text-sm">{{ info.content }}</p>
+        </div>
+      </div>
+    </div>
 
-    <!-- Email -->
-    <mat-form-field appearance="fill">
-      <mat-label>Email</mat-label>
-      <input matInput placeholder="La tua email" formControlName="email">
-      <mat-error *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched">
-        Inserisci una email valida
-      </mat-error>
-    </mat-form-field>
+    <!-- Contact Form Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+      <!-- Left Side - Form -->
+      <div class="animate-fade-in-up">
+        <h2 class="text-3xl font-bold text-[#a9876e] mb-2">Invia un messaggio</h2>
+        <p class="text-gray-700 mb-8">Compila il modulo e ti risponderemo nel più breve tempo possibile.</p>
 
-    <!-- Messaggio -->
-    <mat-form-field appearance="fill">
-      <mat-label>Messaggio</mat-label>
-      <textarea matInput placeholder="Scrivi qui il tuo messaggio" formControlName="message" rows="6"></textarea>
-      <mat-error *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched">
-        Il messaggio è obbligatorio
-      </mat-error>
-    </mat-form-field>
+        <!-- Success Message -->
+        <div *ngIf="submitSuccess()" class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg animate-slide-down">
+          <div class="flex gap-3 items-center">
+            <mat-icon class="text-green-600">check_circle</mat-icon>
+            <div>
+              <p class="font-semibold text-green-800">Messaggio inviato con successo!</p>
+              <p class="text-sm text-green-700">Ti contatteremo al più presto.</p>
+            </div>
+          </div>
+        </div>
 
-    <!-- Pulsante -->
-    <button mat-flat-button type="submit" class="bg-[#a9876e] text-white hover:bg-[#8a705a] py-2 px-6 rounded-lg">
-      Invia
-    </button>
-  </form>
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          <!-- Nome -->
+          <div class="form-group">
+            <label class="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-2">
+              <mat-icon class="text-[#a9876e]">person</mat-icon>
+              <span>Nome Completo</span>
+            </label>
+            <input
+              matInput
+              type="text"
+              placeholder="Il tuo nome"
+              formControlName="name"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#a9876e] focus:outline-none transition-colors"
+              [class.border-red-500]="contactForm.get('name')?.invalid && contactForm.get('name')?.touched">
+            <p class="text-red-600 text-sm mt-1"
+               *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched">
+              {{ getFieldError('name') }}
+            </p>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-2">
+              <mat-icon class="text-[#a9876e]">email</mat-icon>
+              <span>Email</span>
+            </label>
+            <input
+              matInput
+              type="email"
+              placeholder="La tua email"
+              formControlName="email"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#a9876e] focus:outline-none transition-colors"
+              [class.border-red-500]="contactForm.get('email')?.invalid && contactForm.get('email')?.touched">
+            <p class="text-red-600 text-sm mt-1"
+               *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched">
+              {{ getFieldError('email') }}
+            </p>
+          </div>
+
+          <!-- Telefono -->
+          <div class="form-group">
+            <label class="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-2">
+              <mat-icon class="text-[#a9876e]">phone</mat-icon>
+              <span>Telefono (Opzionale)</span>
+            </label>
+            <input
+              matInput
+              type="tel"
+              placeholder="+39 3xx xxx xxxx"
+              formControlName="phone"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#a9876e] focus:outline-none transition-colors"
+              [class.border-red-500]="contactForm.get('phone')?.invalid && contactForm.get('phone')?.touched">
+            <p class="text-red-600 text-sm mt-1"
+               *ngIf="contactForm.get('phone')?.invalid && contactForm.get('phone')?.touched">
+              {{ getFieldError('phone') }}
+            </p>
+          </div>
+
+          <!-- Oggetto -->
+          <div class="form-group">
+            <label class="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-2">
+              <mat-icon class="text-[#a9876e]">subject</mat-icon>
+              <span>Oggetto</span>
+            </label>
+            <input
+              matInput
+              type="text"
+              placeholder="Traccia della tua richiesta"
+              formControlName="subject"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#a9876e] focus:outline-none transition-colors"
+              [class.border-red-500]="contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched">
+            <p class="text-red-600 text-sm mt-1"
+               *ngIf="contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched">
+              {{ getFieldError('subject') }}
+            </p>
+          </div>
+
+          <!-- Messaggio -->
+          <div class="form-group">
+            <label class="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-2">
+              <mat-icon class="text-[#a9876e]">message</mat-icon>
+              <span>Messaggio</span>
+            </label>
+            <textarea
+              matInput
+              placeholder="Scrivi qui il tuo messaggio..."
+              formControlName="message"
+              rows="6"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#a9876e] focus:outline-none transition-colors resize-none"
+              [class.border-red-500]="contactForm.get('message')?.invalid && contactForm.get('message')?.touched"></textarea>
+            <p class="text-red-600 text-sm mt-1"
+               *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched">
+              {{ getFieldError('message') }}
+            </p>
+          </div>
+
+          <!-- Pulsante -->
+          <button
+            type="submit"
+            [disabled]="isSubmitting()"
+            class="w-full py-4 px-6 bg-[#a9876e] text-white font-bold text-lg rounded-lg hover:bg-[#8b6f4f] transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+            <span *ngIf="!isSubmitting()" class="flex items-center gap-2">
+              <mat-icon>send</mat-icon>
+              <span>Invia Messaggio</span>
+            </span>
+            <span *ngIf="isSubmitting()" class="flex items-center gap-2">
+              <mat-icon class="animate-spin">hourglass_empty</mat-icon>
+              <span>Invio in corso...</span>
+            </span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Right Side - Map -->
+      <div class="hidden lg:flex flex-col gap-4 animate-fade-in-up sticky top-8 self-start" style="animation-delay: 300ms;">
+        <div class="rounded-2xl overflow-hidden shadow-lg border border-[#e8dfd5]">
+          <iframe
+            src="https://www.openstreetmap.org/export/embed.html?bbox=9.18,45.46,9.20,45.47&layer=mapnik&marker=45.4654,9.1859"
+            width="100%"
+            height="480"
+            style="border:0; display:block;"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+            title="Lucina — Via della Bellezza, Milano">
+          </iframe>
+        </div>
+        <div class="bg-white rounded-xl border border-[#e8dfd5] shadow px-5 py-4 flex items-center gap-3">
+          <mat-icon class="text-[#a9876e] shrink-0">location_on</mat-icon>
+          <p class="text-sm text-gray-600">Via della Bellezza, 123 &mdash; 20100 Milano</p>
+        </div>
+        <p class="text-xs text-gray-400 text-center">
+          Mappa &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" class="underline hover:text-[#a9876e]">OpenStreetMap</a> contributors, disponibile con licenza
+          <a href="https://opendatacommons.org/licenses/odbl/" target="_blank" rel="noopener" class="underline hover:text-[#a9876e]">ODbL</a>.
+        </p>
+      </div>
+
+    </div>
+  </div>
 </div>
-

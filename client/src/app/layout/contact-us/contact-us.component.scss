@@ -1,0 +1,146 @@
+:host {
+  display: block;
+}
+
+// Animazioni
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 600ms ease-out;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 600ms ease-out 300ms both;
+}
+
+.info-card {
+  animation: slideUp 600ms ease-out forwards;
+}
+
+.animate-slide-down {
+  animation: slideDown 400ms ease-out;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+// Form styles
+.form-group {
+  input,
+  textarea {
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(169, 135, 110, 0.1);
+    }
+
+    &::placeholder {
+      color: #d1d5db;
+    }
+  }
+
+  textarea {
+    font-size: 0.875rem;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .info-card {
+    animation-delay: 0ms !important;
+  }
+
+  .animate-fade-in-up {
+    animation-delay: 0ms !important;
+  }
+}
+
+// Snackbar styles
+::ng-deep {
+  .success-snackbar,
+  .error-snackbar {
+    .mat-mdc-snack-bar-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    .mat-mdc-snack-bar-label::before {
+      font-family: 'Material Icons';
+      font-size: 20px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+  }
+
+  .success-snackbar {
+    background-color: #10b981 !important;
+    color: white !important;
+
+    .mat-mdc-snack-bar-label::before {
+      content: 'check_circle';
+    }
+  }
+
+  .error-snackbar {
+    background-color: #ef4444 !important;
+    color: white !important;
+
+    .mat-mdc-snack-bar-label::before {
+      content: 'warning';
+    }
+  }
+}
