@@ -14,7 +14,7 @@ export class ShopService {
   types: string[] = [];
   brands: string[] = [];
 
-  getProducts(brands?: string[], types?: string[], search?: string): Observable<Pagination<Product>> {
+  getProducts(brands?: string[], types?: string[], search?: string, pageIndex = 1, pageSize = 8, sort?: string): Observable<Pagination<Product>> {
     let params = new HttpParams();
 
     if (brands && brands.length > 0) {
@@ -25,11 +25,16 @@ export class ShopService {
       params = params.append('types', types.join(','));
     }
 
-    if(search && search.trim() != '') {
+    if (search && search.trim() != '') {
       params = params.append('search', search);
     }
 
-    params = params.append('pageSize', 10);
+    if (sort) {
+      params = params.append('sort', sort);
+    }
+
+    params = params.append('pageIndex', pageIndex);
+    params = params.append('pageSize', pageSize);
 
     return this.http.get<Pagination<Product>>(this.baseUrl + 'products', { params });
   }
@@ -40,5 +45,9 @@ export class ShopService {
 
   getTypes(): Observable<string[]> {
     return this.http.get<string[]>(this.baseUrl + 'products/types');
+  }
+
+  getProduct(id: number): Observable<Product> {
+    return this.http.get<Product>(this.baseUrl + 'products/' + id);
   }
 }

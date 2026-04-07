@@ -36,7 +36,7 @@ public class ExceptionMiddleware
 
         var response = env.IsDevelopment()
             ? new ApiErrorResponse(context.Response.StatusCode, ex.Message, ex.StackTrace)
-            : new ApiErrorResponse(context.Response.StatusCode, ex.Message, "Internal server error");
+            : new ApiErrorResponse(context.Response.StatusCode, "An unexpected error occurred.", null);
 
         var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 

@@ -4,6 +4,7 @@ using Core.Specifications;
 using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers;
 
@@ -15,7 +16,7 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
     public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(
 		[FromQuery]ProductSpecParams specParams)
     {
-		var spec = new ProductSpecification(specParams); 
+		var spec = new ProductSpecification(specParams);
 
         return await CreatePagedResult(repo, spec, specParams.PageIndex, specParams.PageSize);
     }
@@ -24,17 +25,18 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
         var product = await repo.GetByIdAsync(id);
-        
+
         if (product == null) return NotFound();
-        
+
         return product;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<Product>> CreateProduct(Product product)
     {
         repo.Add(product);
-		
+
 		if(await repo.SaveAllAsync()){
 			return CreatedAtAction("GetProduct", new { id = product.Id }, product);
 		}
@@ -42,10 +44,11 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
         return BadRequest("Problem creating product");
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<ActionResult> UpdateProduct(int id, Product product)
     {
-        if (product.Id != id || !ProductExists(id)) 
+        if (product.Id != id || !ProductExists(id))
             return BadRequest("Cannot update this product");
 
         repo.Update(product);
@@ -57,13 +60,14 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
 		return BadRequest("Problem updating the product");
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> DeleteProduct(int id)
     {
         var product = await repo.GetByIdAsync(id);
 
         if (product == null) return NotFound();
-        
+
    		repo.Remove(product);
 
         if(await repo.SaveAllAsync()){
@@ -84,7 +88,7 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
 		var spec = new TypeListSpecification();
     	return Ok(await repo.ListAsync(spec));
 	}
-    
+
     private bool ProductExists(int id)
     {
         return repo.Exists(id);
