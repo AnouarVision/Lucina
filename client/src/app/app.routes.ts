@@ -18,6 +18,7 @@ import {ShippingComponent} from './layout/shipping/shipping.component';
 import {ReturnsComponent} from './layout/returns/returns.component';
 import {PrivacyPolicyComponent} from './layout/privacy-policy/privacy-policy.component';
 import {TermsOfServiceComponent} from './layout/terms-of-service/terms-of-service.component';
+import {authGuard} from './core/guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -35,8 +36,8 @@ export const routes: Routes = [
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'terms-of-service', component: TermsOfServiceComponent },
   { path: 'cart', component: CartComponent },
-  { path: 'checkout', component: CheckoutComponent },
-  { path: 'payment-processing', component: PaymentProcessingComponent },
+  { path: 'checkout', component: CheckoutComponent, canActivate: [authGuard] },
+  { path: 'payment-processing', component: PaymentProcessingComponent, canActivate: [authGuard] },
   { path: 'order-summary', component: OrderSummaryComponent}
 ];
 
