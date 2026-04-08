@@ -12,6 +12,7 @@ import { CartService } from '../../core/services/cart.service';
   templateUrl: './payment-processing.component.html',
   styleUrls: ['./payment-processing.component.scss']
 })
+
 export class PaymentProcessingComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -40,29 +41,31 @@ export class PaymentProcessingComponent implements OnInit {
   private processPayment() {
     const progressInterval = setInterval(() => {
       const current = this.progress();
-      if (current < 90) {
-        this.progress.set(current + Math.random() * 30);
+      if (current < 85) {
+        this.progress.set(current + Math.random() * 25);
       }
     }, 300);
 
-    setTimeout(() => {
-      clearInterval(progressInterval);
-      this.progress.set(100);
-
-      const isSuccess = Math.random() > 0.1;
-
-      if (isSuccess) {
+    this.checkoutService.processPayment(this.orderId, {
+      paymentIntentId: `sim_${this.orderId}_${Date.now()}`,
+      processorResponse: 'simulated_success'
+    }).subscribe({
+      next: () => {
+        clearInterval(progressInterval);
+        this.progress.set(100);
         this.cartService.clearCart();
         this.processingStatus.set('success');
-
         setTimeout(() => {
           this.router.navigate(['/']);
         }, 2000);
-      } else {
+      },
+      error: (err) => {
+        clearInterval(progressInterval);
         this.processingStatus.set('error');
-        this.errorMessage.set('Purtroppo il pagamento non è stato elaborato. Riprova più tardi.');
+        const msg = err?.error?.message || 'Purtroppo il pagamento non è stato elaborato. Riprova più tardi.';
+        this.errorMessage.set(msg);
       }
-    }, 2500);
+    });
   }
 
   retryPayment() {

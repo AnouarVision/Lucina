@@ -29,7 +29,7 @@
                 [alt]="product.name"
                 class="w-full h-auto object-cover transition-transform duration-500"
                 [class.scale-110]="imageHovered">
-              
+
               <div
                 class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center"
                 [class.opacity-100]="imageHovered"
@@ -57,15 +57,18 @@
             </div>
 
             <div class="flex items-center gap-2">
-              @if(product.quantityInStock > 5) {
+              @if(availableStock > 5) {
                 <div class="w-3 h-3 rounded-full bg-green-500"></div>
                 <span class="text-green-600 font-medium">In magazzino</span>
-              } @else if(product.quantityInStock > 0) {
+              } @else if(availableStock > 0) {
                 <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                <span class="text-yellow-600 font-medium">Solo {{ product.quantityInStock }} disponibili</span>
+                <span class="text-yellow-600 font-medium">Solo {{ availableStock }} disponibili</span>
               } @else {
-                <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                <span class="text-red-600 font-medium">Non disponibile</span>
+                <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                <div>
+                  <span class="text-red-600 font-semibold">Temporaneamente esaurito</span>
+                  <p class="text-sm text-gray-500 mt-0.5">Questo articolo non è al momento disponibile.</p>
+                </div>
               }
             </div>
 
@@ -73,6 +76,7 @@
               <p class="text-gray-700 leading-relaxed">{{ product.description }}</p>
             </div>
 
+            @if(availableStock > 0) {
             <div class="flex items-center gap-4">
               <span class="text-gray-700 font-medium">Quantità:</span>
               <div class="flex items-center border-2 border-[#a9876e]/30 rounded-lg">
@@ -88,16 +92,17 @@
                   mat-icon-button
                   (click)="increaseQuantity()"
                   class="text-[#a9876e]"
-                  [disabled]="product.quantityInStock < quantity + 1">
+                  [disabled]="quantity >= effectiveMax">
                   <mat-icon>add</mat-icon>
                 </button>
               </div>
             </div>
+            }
 
             <div class="flex flex-col gap-3 pt-4">
               <button
                 (click)="addToCart()"
-                [disabled]="!product || product.quantityInStock === 0"
+                [disabled]="!product || availableStock === 0"
                 class="w-full py-3 px-4 text-lg font-semibold rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
                 [ngClass]="addedToCart ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-[#a9876e] text-white hover:bg-[#8b6f4f] disabled:opacity-50 disabled:cursor-not-allowed'">
                 <mat-icon>{{ addedToCart ? 'check_circle' : 'add_shopping_cart' }}</mat-icon>

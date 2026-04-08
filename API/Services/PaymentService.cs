@@ -1,4 +1,5 @@
 using Core.Entities;
+using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,10 +17,12 @@ namespace API.Services
     public class PaymentService : IPaymentService
     {
         private readonly StoreContext _context;
+        private readonly IStockReservationService _reservation;
 
-        public PaymentService(StoreContext context)
+        public PaymentService(StoreContext context, IStockReservationService reservation)
         {
             _context = context;
+            _reservation = reservation;
         }
 
         public async Task<Order> CreateOrderAsync(string userId, CreateOrderRequest request)
@@ -95,7 +98,9 @@ namespace API.Services
 
         public async Task<bool> ProcessPaymentAsync(int orderId, PaymentDetails paymentDetails)
         {
-            var order = await _context.Orders.FindAsync(orderId);
+            var order = await _context.Orders
+                .Include(o => o.Items)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
             if (order == null) return false;
 
             try
@@ -106,7 +111,20 @@ namespace API.Services
                 order.PaymentDate = DateTime.UtcNow;
                 order.OrderStatus = "Processing";
 
+                foreach (var item in order.Items)
+                {
+                    var product = await _context.Products.FindAsync(item.ProductId);
+                    if (product != null)
+                    {
+                        product.QuantityInStock = Math.Max(0, product.QuantityInStock - item.Quantity);
+                    }
+                }
+
                 await _context.SaveChangesAsync();
+
+                foreach (var item in order.Items)
+                    await _reservation.ReleaseAsync(order.UserId, item.ProductId);
+
                 return true;
             }
             catch (Exception)

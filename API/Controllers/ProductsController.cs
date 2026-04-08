@@ -10,7 +10,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController(IGenericRepository<Product> repo) : BaseApiController
+public class ProductsController(IGenericRepository<Product> repo, IStockReservationService reservation) : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(
@@ -29,6 +29,19 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
         if (product == null) return NotFound();
 
         return product;
+    }
+
+    [HttpGet("{id:int}/available-stock")]
+    public async Task<ActionResult<int>> GetAvailableStock(int id, [FromQuery] string? userId = null)
+    {
+        var product = await repo.GetByIdAsync(id);
+        if (product == null) return NotFound();
+
+        int totalReserved = await reservation.GetTotalReservedAsync(id);
+        int myReserved = userId != null ? await reservation.GetUserReservedAsync(userId, id) : 0;
+        int available = product.QuantityInStock - (totalReserved - myReserved);
+
+        return Ok(Math.Max(0, available));
     }
 
     [Authorize(Roles = "Admin")]

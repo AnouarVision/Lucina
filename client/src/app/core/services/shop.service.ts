@@ -50,4 +50,10 @@ export class ShopService {
   getProduct(id: number): Observable<Product> {
     return this.http.get<Product>(this.baseUrl + 'products/' + id);
   }
+
+  getAvailableStock(productId: number, userId?: number): Observable<number> {
+    let params = new HttpParams();
+    if (userId != null) params = params.set('userId', userId.toString());
+    return this.http.get<number>(`${this.baseUrl}products/${productId}/available-stock`, { params, responseType: 'json' as const });
+  }
 }

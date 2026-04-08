@@ -19,9 +19,16 @@ export class CartItemComponent {
   @Output() remove = new EventEmitter<number>();
   @Output() quantityChange = new EventEmitter<number>();
 
+  readonly MAX_QUANTITY = 99;
   isRemoving = signal(false);
 
+  get effectiveMax(): number {
+    const stock = this.item.availableStock;
+    return stock != null && stock > 0 ? Math.min(stock, this.MAX_QUANTITY) : this.MAX_QUANTITY;
+  }
+
   increaseQuantity() {
+    if (this.item.quantity >= this.effectiveMax) return;
     this.item.quantity++;
     this.quantityChange.emit(this.item.quantity);
   }

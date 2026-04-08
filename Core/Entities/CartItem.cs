@@ -7,5 +7,6 @@
         public int Quantity { get; set; }
         public decimal Price { get; set; }
         public required string ImageUrl { get; set; }
+        public int AvailableStock { get; set; }
     }
 }

@@ -8,7 +8,6 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-
 DotNetEnv.Env.TraversePath().Load();
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,6 +42,7 @@ builder.Services.AddCors(options =>
 // RedisService as a singleton
 builder.Services.AddSingleton(new RedisService("localhost:6379"));
 builder.Services.AddScoped<CartService>();
+builder.Services.AddScoped<IStockReservationService, StockReservationService>();
 
 // Payment Service
 builder.Services.AddScoped<IPaymentService, PaymentService>();
