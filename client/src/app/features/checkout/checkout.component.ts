@@ -60,7 +60,7 @@ export class CheckoutComponent implements OnInit {
   paymentMethod = signal<'card' | 'applepay'>('card');
 
   ngOnInit() {
-    if (!this.authService.getToken()) {
+    if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/profile']);
       return;
     }

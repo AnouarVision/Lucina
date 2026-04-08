@@ -1,26 +1,7 @@
 import { Injectable, signal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
-
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-interface SignupRequest {
-  name: string;
-  email: string;
-  password: string;
-}
-
-interface AuthResponse {
-  token: string;
-  userId: number;
-  email: string;
-  name: string;
-  expiresAt: string;
-}
 
 interface UserProfile {
   id: number;
@@ -92,173 +73,119 @@ interface OrderDetail {
 })
 export class AuthService {
   private apiUrl = 'https://localhost:5001/api/auth';
-  token = signal<string | null>(this.getTokenFromStorage());
-  userId = signal<number | null>(this.getUserIdFromStorage());
-  isAuthenticated = signal(!!this.token());
+  userId = signal<number | null>(this.getFromStorage('user_id') ? parseInt(this.getFromStorage('user_id')!, 10) : null);
+  userEmail = signal<string | null>(this.getFromStorage('user_email'));
+  userName = signal<string | null>(this.getFromStorage('user_name'));
+  isAuthenticated = signal<boolean>(!!this.getFromStorage('user_id'));
 
   constructor(private http: HttpClient, private router: Router) {
-    this.checkTokenValidity();
-  }
-
-  private getTokenFromStorage(): string | null {
-    try {
-      if (typeof localStorage !== 'undefined') {
-        const token = localStorage.getItem('auth_token');
-        if (token) return token;
-      }
-      if (typeof sessionStorage !== 'undefined') {
-        const token = sessionStorage.getItem('auth_token');
-        if (token) return token;
-      }
-    } catch (e) {
-      console.error('Error reading token from storage', e);
-    }
-    return null;
-  }
-
-  private getUserIdFromStorage(): number | null {
-    try {
-      if (typeof localStorage !== 'undefined') {
-        const userId = localStorage.getItem('user_id');
-        if (userId) return parseInt(userId, 10);
-      }
-      if (typeof sessionStorage !== 'undefined') {
-        const userId = sessionStorage.getItem('user_id');
-        if (userId) return parseInt(userId, 10);
-      }
-    } catch (e) {
-      console.error('Error reading user_id from storage', e);
-    }
-    return null;
-  }
-
-  private checkTokenValidity() {
-    const token = this.token();
-    if (token && this.isTokenExpired(token)) {
-      this.logout();
+    if (this.isAuthenticated()) {
+      this.validateSession();
     }
   }
 
-  private isTokenExpired(token: string): boolean {
+  private getFromStorage(key: string): string | null {
     try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.exp * 1000 < Date.now();
+      return localStorage.getItem(key);
     } catch {
-      return true;
+      return null;
     }
   }
 
-  login(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, { email, password } as LoginRequest)
-      .pipe(
-        tap(response => {
-          this.token.set(response.token);
-          this.userId.set(response.userId);
-          this.isAuthenticated.set(true);
-          try {
-            localStorage.setItem('auth_token', response.token);
-            localStorage.setItem('user_id', response.userId.toString());
-            sessionStorage.setItem('auth_token', response.token);
-            sessionStorage.setItem('user_id', response.userId.toString());
-          } catch (e) {
-            console.error('Error saving to storage', e);
-            sessionStorage.setItem('auth_token', response.token);
-            sessionStorage.setItem('user_id', response.userId.toString());
-          }
-        })
-      );
+  private saveUserToStorage(userId: number, email: string, name: string): void {
+    try {
+      localStorage.setItem('user_id', userId.toString());
+      localStorage.setItem('user_email', email);
+      localStorage.setItem('user_name', name);
+    } catch {}
+  }
+
+  private clearUserFromStorage(): void {
+    try {
+      localStorage.removeItem('user_id');
+      localStorage.removeItem('user_email');
+      localStorage.removeItem('user_name');
+    } catch {}
+  }
+
+  private validateSession(): void {
+    this.http.get<{ userId: number; email: string; name: string }>(
+      `${this.apiUrl}/validate`, { withCredentials: true }
+    ).subscribe({
+      next: (res) => {
+        this.userId.set(res.userId);
+        this.userEmail.set(res.email);
+        this.userName.set(res.name);
+        this.isAuthenticated.set(true);
+      },
+      error: () => {
+        // 401 handled by interceptor (tries refresh, then logout)
+      }
+    });
+  }
+
+  login(email: string, password: string): Observable<{ userId: number; email: string; name: string }> {
+    return this.http.post<{ userId: number; email: string; name: string }>(
+      `${this.apiUrl}/login`, { email, password }, { withCredentials: true }
+    ).pipe(
+      tap(response => {
+        this.userId.set(response.userId);
+        this.userEmail.set(response.email);
+        this.userName.set(response.name);
+        this.isAuthenticated.set(true);
+        this.saveUserToStorage(response.userId, response.email, response.name);
+      })
+    );
   }
 
   signup(name: string, email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/signup`, { name, email, password } as SignupRequest);
+    return this.http.post<any>(`${this.apiUrl}/signup`, { name, email, password }, { withCredentials: true });
+  }
+
+  refresh(): Observable<{ userId: number; email: string; name: string }> {
+    return this.http.post<{ userId: number; email: string; name: string }>(
+      `${this.apiUrl}/refresh`, {}, { withCredentials: true }
+    ).pipe(
+      tap(response => {
+        this.userId.set(response.userId);
+        this.userEmail.set(response.email);
+        this.userName.set(response.name);
+        this.isAuthenticated.set(true);
+        this.saveUserToStorage(response.userId, response.email, response.name);
+      })
+    );
   }
 
   getProfile(): Observable<UserProfile> {
-    const token = this.token();
-    let headers = new HttpHeaders();
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
-    }
-    return this.http.get<UserProfile>(`${this.apiUrl}/profile`, { headers });
+    return this.http.get<UserProfile>(`${this.apiUrl}/profile`, { withCredentials: true });
   }
 
   updateProfile(updateData: UpdateProfileRequest): Observable<UserProfile> {
-    const token = this.token();
-    let headers = new HttpHeaders();
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
-    }
-    return this.http.put<UserProfile>(`${this.apiUrl}/profile`, updateData, { headers });
+    return this.http.put<UserProfile>(`${this.apiUrl}/profile`, updateData, { withCredentials: true });
   }
 
   getOrders(): Observable<OrderSummary[]> {
-    const token = this.token();
-    let headers = new HttpHeaders();
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
-    }
-    return this.http.get<OrderSummary[]>(`${this.apiUrl}/orders`, { headers });
+    return this.http.get<OrderSummary[]>(`${this.apiUrl}/orders`, { withCredentials: true });
   }
 
   getOrderById(id: number): Observable<OrderDetail> {
-    const token = this.token();
-    let headers = new HttpHeaders();
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
-    }
-    return this.http.get<OrderDetail>(`${this.apiUrl}/orders/${id}`, { headers });
+    return this.http.get<OrderDetail>(`${this.apiUrl}/orders/${id}`, { withCredentials: true });
   }
 
-  logout() {
-    this.token.set(null);
+  logout(): void {
+    this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe();
     this.userId.set(null);
+    this.userEmail.set(null);
+    this.userName.set(null);
     this.isAuthenticated.set(false);
-    try {
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('user_id');
-    } catch (e) {
-      console.error('Error removing from localStorage', e);
-    }
-    try {
-      sessionStorage.removeItem('auth_token');
-      sessionStorage.removeItem('user_id');
-    } catch (e) {
-      console.error('Error removing from sessionStorage', e);
-    }
+    this.clearUserFromStorage();
     this.router.navigate(['/profile']);
   }
 
-  getToken(): string | null {
-    const token = this.token();
-    if (!token) {
-      const stored = this.getTokenFromStorage();
-      if (stored) {
-        this.token.set(stored);
-        return stored;
-      }
-    }
-    return token;
-  }
-
   getUserId(): number | null {
-    const userId = this.userId();
-    if (userId === null || userId === undefined) {
-      const stored = this.getUserIdFromStorage();
-      if (stored) {
-        this.userId.set(stored);
-        return stored;
-      }
-    }
-    return userId;
+    return this.userId();
   }
 
-  getAuthHeader() {
-    const token = this.token();
-    if (token) {
-      return {
-        'Authorization': `Bearer ${token}`
-      };
-    }
-    return {};
-  }
+  getToken(): string | null { return null; }
+  getAuthHeader(): Record<string, string> { return {}; }
 }

@@ -8,4 +8,7 @@ public interface IUserRepository
     Task<User?> GetByIdAsync(int id);
     Task<User> CreateAsync(User user);
     Task SaveChangesAsync();
+    Task SaveRefreshTokenAsync(RefreshToken token);
+    Task<RefreshToken?> GetRefreshTokenByHashAsync(string hash);
+    Task RevokeAllUserRefreshTokensAsync(int userId);
 }

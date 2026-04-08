@@ -13,6 +13,7 @@ public class StoreContext(DbContextOptions options) : DbContext(options)
     public DbSet<User> Users { get; set; }
     public DbSet<CouponCode> CouponCodes { get; set; }
     public DbSet<NewsletterSubscription> NewsletterSubscriptions { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,5 +29,11 @@ public class StoreContext(DbContextOptions options) : DbContext(options)
 
         modelBuilder.Entity<OrderItem>()
             .HasKey(oi => oi.Id);
+
+        modelBuilder.Entity<RefreshToken>()
+            .HasOne(rt => rt.User)
+            .WithMany()
+            .HasForeignKey(rt => rt.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Core.Entities;
 using Core.Interfaces;
@@ -25,6 +26,9 @@ public interface IAuthService
     Task<User?> GetUserByIdAsync(int userId);
     Task<(bool Success, string Message, User? User)> UpdateProfileAsync(int userId, UpdateProfileRequest request);
     string GenerateJwtToken(User user);
+    Task<string> GenerateRefreshTokenAsync(User user);
+    Task<User?> ValidateRefreshTokenAsync(string plainToken);
+    Task RevokeRefreshTokenAsync(string plainToken);
 }
 
 public class AuthService : IAuthService
@@ -144,5 +148,55 @@ public class AuthService : IAuthService
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
+    }
+
+    public async Task<string> GenerateRefreshTokenAsync(User user)
+    {
+        var randomBytes = new byte[64];
+        RandomNumberGenerator.Fill(randomBytes);
+        var plainToken = Convert.ToBase64String(randomBytes);
+        var tokenHash = HashToken(plainToken);
+
+        var refreshToken = new RefreshToken
+        {
+            UserId = user.Id,
+            TokenHash = tokenHash,
+            ExpiresAt = DateTime.UtcNow.AddDays(7)
+        };
+
+        await _userRepository.SaveRefreshTokenAsync(refreshToken);
+        return plainToken;
+    }
+
+    public async Task<User?> ValidateRefreshTokenAsync(string plainToken)
+    {
+        var hash = HashToken(plainToken);
+        var storedToken = await _userRepository.GetRefreshTokenByHashAsync(hash);
+
+        if (storedToken == null || storedToken.IsRevoked || storedToken.ExpiresAt < DateTime.UtcNow)
+            return null;
+
+        storedToken.IsRevoked = true;
+        await _userRepository.SaveChangesAsync();
+
+        return await _userRepository.GetByIdAsync(storedToken.UserId);
+    }
+
+    public async Task RevokeRefreshTokenAsync(string plainToken)
+    {
+        var hash = HashToken(plainToken);
+        var storedToken = await _userRepository.GetRefreshTokenByHashAsync(hash);
+        if (storedToken != null)
+        {
+            storedToken.IsRevoked = true;
+            await _userRepository.SaveChangesAsync();
+        }
+    }
+
+    private static string HashToken(string token)
+    {
+        var bytes = Encoding.UTF8.GetBytes(token);
+        var hash = SHA256.HashData(bytes);
+        return Convert.ToBase64String(hash);
     }
 }

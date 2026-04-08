@@ -35,7 +35,7 @@
 ## Features
 
 - Full checkout flow: browsing → cart → coupon → shipping → payment → order confirmation
-- JWT authentication with role-based access (User / Admin)
+- JWT authentication with cookie-based token storage, refresh token rotation and role-based access (User / Admin)
 - Server-side promotional coupon system (Admin-generated, server-validated)
 - Free shipping threshold (≥ €65 on standard shipping)
 - Stripe payment integration
@@ -51,7 +51,7 @@
 - Working contact form with server-side email delivery
 - **GDPR compliance**: opt-in checkbox at registration, Privacy Policy and Terms of Service pages
 - **Security hardening**: role-based Admin guards on write endpoints, IDOR protection on cart/payment, security response headers, HTTPS redirection
-- **JWT HTTP interceptor**: automatically attaches Bearer token to all API requests
+- **JWT HTTP interceptor**: automatically attaches cookies to all API requests via `withCredentials`, transparently refreshes the access token on 401
 
 ---
 
@@ -61,7 +61,7 @@
 |---|---|
 | Frontend | Angular 20, Angular Material 20, Tailwind CSS 4 |
 | Backend | ASP.NET Core 9, Entity Framework Core 9 |
-| Authentication | JWT, BCrypt.Net, role claims (`Admin` / `User`) |
+| Authentication | JWT (HttpOnly cookie), BCrypt.Net, refresh token rotation, role claims (`Admin` / `User`) |
 | Database | SQL Server 2022 (Docker) |
 | Cache | Redis 7 (cart persistence) |
 | Payments | Stripe.net 50 |
@@ -108,11 +108,14 @@ Base URL: `https://localhost:5001/api`
 ### Auth — `/api/auth`
 | Method | Endpoint | Auth | Description |
 |---|---|---|---|
-| POST | `/login` | — | Login; returns JWT |
+| POST | `/login` | — | Login; sets `access_token` + `refresh_token` cookies |
 | POST | `/signup` | — | Register new account |
+| POST | `/refresh` | — | Rotate access + refresh tokens (reads `refresh_token` cookie) |
+| POST | `/logout` | — | Revoke refresh token and clear cookies |
+| GET | `/validate` | [jwt] | Validate current session (used at app startup) |
 | GET | `/profile` | [jwt] | Get current user profile |
 | PUT | `/profile` | [jwt] | Update profile |
-| GET | `/orders` | [jwt] | List user orders (paginated) |
+| GET | `/orders` | [jwt] | List user orders |
 | GET | `/orders/{id}` | [jwt] | Order detail with items |
 
 ### Products — `/api/products`
@@ -199,6 +202,7 @@ Base URL: `https://localhost:5001/api`
 | `DeliveryOption` | ShortName, DeliveryTime, Price |
 | `Cart` *(Redis)* | UserId, Items[] |
 | `NewsletterSubscription` | Email, SubscribedAt, IsActive |
+| `RefreshToken` | UserId, TokenHash (SHA-256), ExpiresAt, IsRevoked |
 
 ---
 
@@ -367,7 +371,29 @@ Admin users can then call the `/api/coupon/generate`, list and deactivate endpoi
 - Cart endpoints require `[Authorize]` and enforce ownership checks (users can only access their own cart)
 - Payment endpoints are IDOR-protected: orders are always verified against the authenticated user's ID
 - `UpdateOrderStatus` is restricted to Admin only
-- A global **JWT HTTP interceptor** (`auth.interceptor.ts`) automatically attaches the Bearer token to every outbound API request
+- A global **JWT HTTP interceptor** (`auth.interceptor.ts`) adds `withCredentials: true` to every outbound API request and transparently refreshes the access token on 401
+
+### JWT Storage — Why HttpOnly Cookies
+
+The access token and refresh token are stored exclusively in **HttpOnly cookies**, never in `localStorage` or `sessionStorage`. The rationale:
+
+| Storage | Problem |
+|---|---|
+| `localStorage` | Readable by any JavaScript on the page. A single XSS injection is enough for an attacker to exfiltrate the token and impersonate the user. |
+| `sessionStorage` | Same attack surface as `localStorage`, still accessible via `document.cookie`, equivalent JS APIs; cleared on tab close but otherwise equally vulnerable. |
+| **HttpOnly cookie** | The browser **never** exposes the cookie value to JavaScript (`document.cookie` returns nothing). Even if an XSS payload runs, it cannot read or steal the token. |
+
+Additional cookie flags used:
+
+| Flag | Protection |
+|---|---|
+| `HttpOnly` | Prevents any JavaScript access to the cookie value. |
+| `Secure` | Cookie is only transmitted over HTTPS. Prevents token theft via network sniffing or Man-in-the-Middle attacks on unencrypted connections. |
+| `SameSite=Strict` | Cookie is never sent on cross-site requests. Provides strong CSRF protection, a malicious third-party site cannot trigger authenticated requests on behalf of the user. |
+
+Token lifetimes:
+- **access_token**: 15 minutes (short-lived, limits exposure if somehow leaked)
+- **refresh_token**: 7 days, path-scoped to `/api/auth` only (not sent on every request), SHA-256 hashed at rest, rotated on every use
 
 ### Security Headers
 `Program.cs` sets the following response headers on every request:

@@ -35,4 +35,26 @@ public class UserRepository : IUserRepository
     {
         await _context.SaveChangesAsync();
     }
+
+    public async Task SaveRefreshTokenAsync(RefreshToken token)
+    {
+        _context.RefreshTokens.Add(token);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<RefreshToken?> GetRefreshTokenByHashAsync(string hash)
+    {
+        return await _context.RefreshTokens
+            .FirstOrDefaultAsync(rt => rt.TokenHash == hash && !rt.IsRevoked);
+    }
+
+    public async Task RevokeAllUserRefreshTokensAsync(int userId)
+    {
+        var tokens = await _context.RefreshTokens
+            .Where(rt => rt.UserId == userId && !rt.IsRevoked)
+            .ToListAsync();
+        foreach (var token in tokens)
+            token.IsRevoked = true;
+        await _context.SaveChangesAsync();
+    }
 }

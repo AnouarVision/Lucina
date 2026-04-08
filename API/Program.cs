@@ -56,7 +56,7 @@ builder.Services.AddHttpClient();
 // User Repository and Auth Service
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 var jwtSecretKey = builder.Configuration["Jwt:SecretKey"] ?? "your_super_secret_jwt_key_min_32_characters_long_12345678";
-var jwtExpirationMinutes = int.Parse(builder.Configuration["Jwt:ExpirationMinutes"] ?? "60");
+var jwtExpirationMinutes = int.Parse(builder.Configuration["Jwt:ExpirationMinutes"] ?? "15");
 builder.Services.AddScoped<IAuthService>(provider =>
     new AuthService(provider.GetRequiredService<IUserRepository>(), jwtSecretKey, jwtExpirationMinutes));
 
@@ -72,6 +72,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false,
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                context.Token = context.Request.Cookies["access_token"];
+                return Task.CompletedTask;
+            }
         };
     });
 

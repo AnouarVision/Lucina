@@ -5,6 +5,7 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace API.Controllers;
 
@@ -22,7 +23,7 @@ public class AuthController : BaseApiController
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResponseDto>> Login(LoginRequestDto loginRequest)
+    public async Task<ActionResult> Login(LoginRequestDto loginRequest)
     {
         if (!ModelState.IsValid)
             return BadRequest(new ApiErrorResponse(400, "Invalid request data", string.Join("; ", ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)))));
@@ -32,17 +33,12 @@ public class AuthController : BaseApiController
         if (!success || user == null)
             return BadRequest(new ApiErrorResponse(400, message, null));
 
-        var token = _authService.GenerateJwtToken(user);
-        var expiresAt = DateTime.UtcNow.AddMinutes(60);
+        var accessToken = _authService.GenerateJwtToken(user);
+        var refreshToken = await _authService.GenerateRefreshTokenAsync(user);
 
-        return Ok(new AuthResponseDto
-        {
-            Token = token,
-            UserId = user.Id,
-            Email = user.Email,
-            Name = user.Name,
-            ExpiresAt = expiresAt
-        });
+        SetTokenCookies(accessToken, refreshToken);
+
+        return Ok(new { userId = user.Id, email = user.Email, name = user.Name });
     }
 
     [HttpPost("signup")]
@@ -62,11 +58,56 @@ public class AuthController : BaseApiController
         return Ok(new { message = "Registration successful. Please log in." });
     }
 
+    [HttpPost("refresh")]
+    public async Task<ActionResult> Refresh()
+    {
+        var refreshToken = Request.Cookies["refresh_token"];
+        if (string.IsNullOrEmpty(refreshToken))
+            return Unauthorized(new ApiErrorResponse(401, "Refresh token missing", null));
+
+        var user = await _authService.ValidateRefreshTokenAsync(refreshToken);
+        if (user == null)
+            return Unauthorized(new ApiErrorResponse(401, "Invalid or expired refresh token", null));
+
+        var newAccessToken = _authService.GenerateJwtToken(user);
+        var newRefreshToken = await _authService.GenerateRefreshTokenAsync(user);
+
+        SetTokenCookies(newAccessToken, newRefreshToken);
+
+        return Ok(new { userId = user.Id, email = user.Email, name = user.Name });
+    }
+
+    [HttpPost("logout")]
+    public async Task<ActionResult> Logout()
+    {
+        var refreshToken = Request.Cookies["refresh_token"];
+        if (!string.IsNullOrEmpty(refreshToken))
+            await _authService.RevokeRefreshTokenAsync(refreshToken);
+
+        Response.Cookies.Delete("access_token", new CookieOptions { Path = "/" });
+        Response.Cookies.Delete("refresh_token", new CookieOptions { Path = "/api/auth" });
+
+        return Ok(new { message = "Logged out successfully" });
+    }
+
+    [HttpGet("validate")]
+    [Authorize]
+    public ActionResult Validate()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var email = User.FindFirst(ClaimTypes.Email)?.Value;
+        var name = User.FindFirst(ClaimTypes.Name)?.Value;
+
+        if (userId == null) return Unauthorized();
+
+        return Ok(new { userId = int.Parse(userId), email, name });
+    }
+
     [HttpGet("profile")]
     [Authorize]
     public async Task<ActionResult<UserProfileDto>> GetProfile()
     {
-        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (!int.TryParse(userIdClaim, out var userId))
             return Unauthorized(new ApiErrorResponse(401, "Invalid token", null));
 
@@ -92,7 +133,7 @@ public class AuthController : BaseApiController
     [Authorize]
     public async Task<ActionResult<UserProfileDto>> UpdateProfile(UpdateProfileRequest updateRequest)
     {
-        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (!int.TryParse(userIdClaim, out var userId))
             return Unauthorized(new ApiErrorResponse(401, "Invalid token", null));
 
@@ -122,7 +163,7 @@ public class AuthController : BaseApiController
     [Authorize]
     public async Task<ActionResult<List<OrderSummaryDto>>> GetUserOrders()
     {
-        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (!int.TryParse(userIdClaim, out var userId))
             return Unauthorized(new ApiErrorResponse(401, "Invalid token", null));
 
@@ -165,7 +206,7 @@ public class AuthController : BaseApiController
     [Authorize]
     public async Task<ActionResult<OrderDetailDto>> GetOrderById(int id)
     {
-        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (!int.TryParse(userIdClaim, out var userId))
             return Unauthorized(new ApiErrorResponse(401, "Invalid token", null));
 
@@ -206,6 +247,27 @@ public class AuthController : BaseApiController
                 UnitPrice = oi.UnitPrice,
                 ProductImageUrl = oi.ProductImageUrl
             }).ToList()
+        });
+    }
+
+    private void SetTokenCookies(string accessToken, string refreshToken)
+    {
+        Response.Cookies.Append("access_token", accessToken, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Path = "/",
+            Expires = DateTimeOffset.UtcNow.AddMinutes(15)
+        });
+
+        Response.Cookies.Append("refresh_token", refreshToken, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Path = "/api/auth",
+            Expires = DateTimeOffset.UtcNow.AddDays(7)
         });
     }
 }
