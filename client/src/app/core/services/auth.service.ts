@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 
 interface LoginRequest {
@@ -95,7 +96,7 @@ export class AuthService {
   userId = signal<number | null>(this.getUserIdFromStorage());
   isAuthenticated = signal(!!this.token());
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     this.checkTokenValidity();
   }
 
@@ -224,6 +225,7 @@ export class AuthService {
     } catch (e) {
       console.error('Error removing from sessionStorage', e);
     }
+    this.router.navigate(['/profile']);
   }
 
   getToken(): string | null {
