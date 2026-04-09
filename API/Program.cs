@@ -41,7 +41,7 @@ builder.Services.AddCors(options =>
 
 // RedisService as a singleton
 builder.Services.AddSingleton(new RedisService("localhost:6379"));
-builder.Services.AddScoped<CartService>();
+builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IStockReservationService, StockReservationService>();
 
 // Payment Service

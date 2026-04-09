@@ -13,9 +13,9 @@ namespace API.Controllers
     public class PaymentController : BaseApiController
     {
         private readonly IPaymentService _paymentService;
-        private readonly CartService _cartService;
+        private readonly ICartService _cartService;
 
-        public PaymentController(IPaymentService paymentService, CartService cartService)
+        public PaymentController(IPaymentService paymentService, ICartService cartService)
         {
             _paymentService = paymentService;
             _cartService = cartService;

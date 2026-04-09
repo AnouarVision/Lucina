@@ -102,6 +102,9 @@ public class CouponController : BaseApiController
 
         if (coupon == null || !coupon.IsActive) return BadRequest(new { message = "Codice non valido." });
 
+        if (coupon.MaxUses.HasValue && coupon.UsedCount >= coupon.MaxUses.Value)
+            return BadRequest(new { message = "Codice esaurito." });
+
         coupon.UsedCount++;
         await _context.SaveChangesAsync();
         return Ok();

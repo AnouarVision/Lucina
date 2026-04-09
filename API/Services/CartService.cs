@@ -4,7 +4,15 @@ using System.Text.Json;
 
 namespace API.Services
 {
-    public class CartService
+    public interface ICartService
+    {
+        Task<Cart> GetCartAsync(string userId);
+        Task SaveCartAsync(Cart cart);
+        Task AddItemAsync(string userId, CartItem item);
+        Task RemoveItemAsync(string userId, int productId);
+    }
+
+    public class CartService : ICartService
     {
         private readonly IDatabase _db;
 

@@ -12,13 +12,13 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class CartController : ControllerBase
     {
-        private readonly CartService _cartService;
+        private readonly ICartService _cartService;
         private readonly IGenericRepository<Product> _productRepo;
         private readonly IStockReservationService _reservation;
         private const int MaxItemQuantity = 99;
 
         public CartController(
-            CartService cartService,
+            ICartService cartService,
             IGenericRepository<Product> productRepo,
             IStockReservationService reservation)
         {

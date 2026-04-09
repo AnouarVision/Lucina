@@ -30,6 +30,13 @@ namespace API.Services
             if (request.Items == null || !request.Items.Any())
                 throw new ArgumentException("Order must contain at least one item");
 
+            foreach (var item in request.Items)
+            {
+                var product = await _context.Products.FindAsync(item.ProductId);
+                if (product != null && product.QuantityInStock < item.Quantity)
+                    throw new InvalidOperationException($"Insufficient stock for product '{item.ProductName}'.");
+            }
+
             var order = new Order
             {
                 UserId = userId,
