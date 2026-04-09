@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{74C88379-1F44-4054-90C0-FD7AD7079E38}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lucina.Tests", "Lucina.Tests\Lucina.Tests.csproj", "{A2F292C5-6078-455A-A473-1BAF8DCBEA56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{74C88379-1F44-4054-90C0-FD7AD7079E38}.Release|x64.Build.0 = Release|Any CPU
 		{74C88379-1F44-4054-90C0-FD7AD7079E38}.Release|x86.ActiveCfg = Release|Any CPU
 		{74C88379-1F44-4054-90C0-FD7AD7079E38}.Release|x86.Build.0 = Release|Any CPU
+		{A2F292C5-6078-455A-A473-1BAF8DCBEA56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2F292C5-6078-455A-A473-1BAF8DCBEA56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2F292C5-6078-455A-A473-1BAF8DCBEA56}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A2F292C5-6078-455A-A473-1BAF8DCBEA56}.Debug|x64.Build.0 = Debug|Any CPU
+		{A2F292C5-6078-455A-A473-1BAF8DCBEA56}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A2F292C5-6078-455A-A473-1BAF8DCBEA56}.Debug|x86.Build.0 = Debug|Any CPU
+		{A2F292C5-6078-455A-A473-1BAF8DCBEA56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2F292C5-6078-455A-A473-1BAF8DCBEA56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2F292C5-6078-455A-A473-1BAF8DCBEA56}.Release|x64.ActiveCfg = Release|Any CPU
+		{A2F292C5-6078-455A-A473-1BAF8DCBEA56}.Release|x64.Build.0 = Release|Any CPU
+		{A2F292C5-6078-455A-A473-1BAF8DCBEA56}.Release|x86.ActiveCfg = Release|Any CPU
+		{A2F292C5-6078-455A-A473-1BAF8DCBEA56}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
