@@ -10,29 +10,32 @@
 3. [Browsing Products](#3-browsing-products)
    - 3.1 [Searching and Filtering](#31-searching-and-filtering)
    - 3.2 [Product Detail Page](#32-product-detail-page)
-4. [Shopping Cart](#4-shopping-cart)
-   - 4.1 [Adding Products](#41-adding-products)
-   - 4.2 [Removing or Adjusting Items](#42-removing-or-adjusting-items)
-   - 4.3 [Choosing a Delivery Option](#43-choosing-a-delivery-option)
-5. [Checkout](#5-checkout)
-   - 5.1 [Applying a Coupon](#51-applying-a-coupon)
-   - 5.2 [Entering a Shipping Address](#52-entering-a-shipping-address)
-   - 5.3 [Choosing a Payment Method](#53-choosing-a-payment-method)
-   - 5.4 [Order Summary](#54-order-summary)
-   - 5.5 [Completing Payment](#55-completing-payment)
-6. [Your Account](#6-your-account)
-   - 6.1 [Order History](#61-order-history)
-   - 6.2 [Printing an Invoice](#62-printing-an-invoice)
-   - 6.3 [Updating Your Profile](#63-updating-your-profile)
-7. [K-Beauty Assistant](#7-k-beauty-assistant)
-8. [Newsletter](#8-newsletter)
-9. [About Us](#9-about-us)
-10. [Skincare Routine](#10-skincare-routine)
-11. [Contact Us](#11-contact-us)
-12. [Admin Guide](#12-admin-guide)
-    - 12.1 [Creating a Coupon](#121-creating-a-coupon)
-    - 12.2 [Viewing and Deactivating Coupons](#122-viewing-and-deactivating-coupons)
-13. [Frequently Asked Questions](#13-frequently-asked-questions)
+4. [Wishlist](#4-wishlist)
+   - 4.1 [Saving a Product](#41-saving-a-product)
+   - 4.2 [Viewing Your Wishlist](#42-viewing-your-wishlist)
+5. [Shopping Cart](#5-shopping-cart)
+   - 5.1 [Adding Products](#51-adding-products)
+   - 5.2 [Removing or Adjusting Items](#52-removing-or-adjusting-items)
+   - 5.3 [Choosing a Delivery Option](#53-choosing-a-delivery-option)
+6. [Checkout](#6-checkout)
+   - 6.1 [Applying a Coupon](#61-applying-a-coupon)
+   - 6.2 [Entering a Shipping Address](#62-entering-a-shipping-address)
+   - 6.3 [Choosing a Payment Method](#63-choosing-a-payment-method)
+   - 6.4 [Order Summary](#64-order-summary)
+   - 6.5 [Completing Payment](#65-completing-payment)
+7. [Your Account](#7-your-account)
+   - 7.1 [Order History](#71-order-history)
+   - 7.2 [Printing an Invoice](#72-printing-an-invoice)
+   - 7.3 [Updating Your Profile](#73-updating-your-profile)
+8. [K-Beauty Assistant](#8-k-beauty-assistant)
+9. [Newsletter](#9-newsletter)
+10. [About Us](#10-about-us)
+11. [Skincare Routine](#11-skincare-routine)
+12. [Contact Us](#12-contact-us)
+13. [Admin Guide](#13-admin-guide)
+    - 13.1 [Creating a Coupon](#131-creating-a-coupon)
+    - 13.2 [Viewing and Deactivating Coupons](#132-viewing-and-deactivating-coupons)
+14. [Frequently Asked Questions](#14-frequently-asked-questions)
 
 ---
 
@@ -124,9 +127,37 @@ If a product is out of stock, the button will be disabled.
 
 ---
 
-## 4. Shopping Cart
+## 4. Wishlist
 
-### 4.1 Adding Products
+The wishlist lets you save products you are interested in so you can find them again quickly without adding them to your cart.
+
+### 4.1 Saving a Product
+
+On the **Shop** page, every product card displays a heart icon in the top-right corner of the product image.
+
+- Click the heart icon to **add** the product to your wishlist. The icon turns red to confirm it has been saved.
+- Click the red heart again to **remove** the product from your wishlist.
+
+![Like button on product card](docs/images/manual/like.png)
+
+> **Note:** The wishlist is saved in your browser. It does not require an account and is not tied to any specific device. Clearing your browser data will reset the wishlist.
+
+### 4.2 Viewing Your Wishlist
+
+Click the heart icon in the navigation bar (or the **Wishlist** link in the footer) to open the **La Mia Wishlist** page. If you have saved any products, they will appear in a grid with their name, price and an **Aggiungi al carrello** button.
+
+- To add a product to your cart directly from the wishlist, click **Aggiungi al carrello**.
+- To remove a product from the wishlist, click the X icon in the top-right corner of its card.
+
+If the wishlist is empty, you will see a message inviting you to browse the shop.
+
+![Wishlist page](docs/images/manual/wishlist.png)
+
+---
+
+## 5. Shopping Cart
+
+### 5.1 Adding Products
 
 On any product detail page, select the quantity you want and click **Add to cart**. The cart icon in the navigation bar will update to show the number of items.
 
@@ -134,7 +165,7 @@ On any product detail page, select the quantity you want and click **Add to cart
 
 > **Note:** You cannot add more units than are currently in stock. The maximum quantity per product is 99.
 
-### 4.2 Removing or Adjusting Items
+### 5.2 Removing or Adjusting Items
 
 Open your cart by clicking the cart icon in the navigation bar.
 
@@ -148,7 +179,7 @@ The order summary on the right updates automatically as you make changes.
 
 > **Note:** Your cart is saved on the server, so it will still be there if you close the browser and come back later. Items in your cart are soft-reserved for 10 minutes of inactivity. After that, the reservation expires and the stock becomes available to other users again.
 
-### 4.3 Choosing a Delivery Option
+### 5.3 Choosing a Delivery Option
 
 At the bottom of the cart you can select your preferred delivery method. Each option shows the estimated delivery time and cost.
 
@@ -158,11 +189,11 @@ At the bottom of the cart you can select your preferred delivery method. Each op
 
 ---
 
-## 5. Checkout
+## 6. Checkout
 
 You must be logged in to proceed to checkout.
 
-### 5.1 Applying a Coupon
+### 6.1 Applying a Coupon
 
 In the cart or at checkout, enter your coupon code in the **Coupon code** field and click **Apply**.
 
@@ -172,7 +203,7 @@ In the cart or at checkout, enter your coupon code in the **Coupon code** field 
 ![Coupon field](docs/images/manual/coupon.jpeg)
 You can only apply one coupon per order.
 
-### 5.2 Entering a Shipping Address
+### 6.2 Entering a Shipping Address
 
 At checkout, fill in your shipping address: full name, street address, city, postal code and country.
 
@@ -180,19 +211,19 @@ At checkout, fill in your shipping address: full name, street address, city, pos
 
 Make sure the address is complete and correct before proceeding.
 
-### 5.3 Choosing a Payment Method
+### 6.3 Choosing a Payment Method
 
 After entering your shipping address, you will be asked to select a payment method. Choose your preferred option and click **Riepilogo** to proceed.
 
 ![Payment method](docs/images/manual/payment_method.jpeg)
 
-### 5.4 Order Summary
+### 6.4 Order Summary
 
 Review your full order before confirming: items, quantities, delivery option, coupon discount (if any), payment method and total. If everything looks correct, click **Completa il pagamento**.
 
 ![Order summary](docs/images/manual/summary.jpeg)
 
-### 5.5 Completing Payment
+### 6.5 Completing Payment
 
 You will be taken to the payment page, which simulates a connection to your bank for payment approval. Wait for the process to complete. Once approved, you will be automatically redirected to the homepage.
 
@@ -200,9 +231,9 @@ You will be taken to the payment page, which simulates a connection to your bank
 
 ---
 
-## 6. Your Account
+## 7. Your Account
 
-### 6.1 Order History
+### 7.1 Order History
 
 To view your past orders:
 
@@ -214,13 +245,13 @@ You will see a list of all your orders with their status, date and total. Click 
 
 ![Order history](docs/images/manual/my-orders.png)
 
-### 6.2 Printing an Invoice
+### 7.2 Printing an Invoice
 
 From the order detail page, click **Print invoice**. Your browser's print dialog will open. You can print to paper or save as a PDF.
 
 ![Invoice](docs/images/manual/invoice.png)
 
-### 6.3 Updating Your Profile
+### 7.3 Updating Your Profile
 
 1. Go to **My profile**.
 2. Click **Edit profile**, the pencil.
@@ -233,7 +264,7 @@ Your email address cannot be changed after registration.
 
 ---
 
-## 7. K-Beauty Assistant
+## 8. K-Beauty Assistant
 
 Lucina includes an AI-powered assistant that can help you with questions about Korean skincare routines, ingredients, product recommendations and K-Beauty in general.
 
@@ -253,7 +284,7 @@ To use the assistant:
 
 ---
 
-## 8. Newsletter
+## 9. Newsletter
 
 To subscribe to the Lucina newsletter and receive a welcome discount:
 
@@ -269,7 +300,7 @@ To unsubscribe at any time, click the **Unsubscribe** link at the bottom of any 
 
 ---
 
-## 9. About Us
+## 10. About Us
 
 The **About Us** page tells the story of Lucina and explains the values behind the brand.
 
@@ -285,13 +316,13 @@ The page is divided into three sections:
 
 ---
 
-## 10. Skincare Routine
+## 11. Skincare Routine
 
 The **Skincare Routine** page helps you build a personalised K-Beauty routine based on your skin type.
 
 To reach it, click **Skincare Routine** in the navigation bar.
 
-### 10.1 Selecting Your Skin Type
+### 11.1 Selecting Your Skin Type
 
 At the top of the page, choose one of the four skin types:
 
@@ -304,7 +335,7 @@ At the top of the page, choose one of the four skin types:
 
 The recommended routine updates automatically to suit your selection.
 
-### 10.2 Morning and Evening Routines
+### 11.2 Morning and Evening Routines
 
 Use the **Morning** and **Evening** tabs to switch between the two routines. Each step card shows:
 
@@ -319,7 +350,7 @@ Follow the steps in order for best results.
 
 ---
 
-## 11. Contact Us
+## 12. Contact Us
 
 If you have a question, feedback or a problem that is not covered in this manual:
 
@@ -333,11 +364,11 @@ Your message will be delivered to the Lucina team by email. You will receive a r
 
 ---
 
-## 12. Admin Guide
+## 13. Admin Guide
 
 This section is intended for users with Admin access only. Admin accounts are assigned manually and cannot be created through the registration form.
 
-### 12.1 Creating a Coupon
+### 13.1 Creating a Coupon
 
 1. Log in with your Admin account.
 2. Go to the **Admin** section from the navigation bar.
@@ -355,7 +386,7 @@ This section is intended for users with Admin access only. Admin accounts are as
 
 The coupon is immediately active and available for use.
 
-### 12.2 Viewing and Deactivating Coupons
+### 13.2 Viewing and Deactivating Coupons
 
 1. Go to the **Admin** section.
 2. Select **Coupons**.
@@ -366,7 +397,7 @@ To deactivate a coupon before its expiry date, click **Deactivate** next to it. 
 
 ---
 
-## 13. Frequently Asked Questions
+## 14. Frequently Asked Questions
 
 The **FAQ** page offers a searchable, categorised list of common questions. To reach it, click **FAQ** in the footer or navigation bar.
 
