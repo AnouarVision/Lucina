@@ -5,11 +5,16 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-  
+
+  <!-- Workaround for SDK 9.0.300 bug: DiscoverPrecompressedAssets duplicate key on case-insensitive filesystems -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DisableBuildCompression>true</DisableBuildCompression>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.5" />
