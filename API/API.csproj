@@ -9,6 +9,7 @@
   <!-- Workaround for SDK 9.0.300 bug: DiscoverPrecompressedAssets duplicate key on case-insensitive filesystems -->
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <DisableBuildCompression>true</DisableBuildCompression>
+    <StaticWebAssetsEnabled>false</StaticWebAssetsEnabled>
   </PropertyGroup>
 
   <ItemGroup>
